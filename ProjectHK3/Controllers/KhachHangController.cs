@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectHK3.Models;
+using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,50 +10,103 @@ namespace ProjectHK3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KhachHangsController : ControllerBase
+    public class KhachHangController : ControllerBase
     {
-        private readonly ProjectHk3Context _khachHang;
+        private readonly ProjectHk3Context _context;
 
-        public KhachHangsController(ProjectHk3Context context)
+        public KhachHangController(ProjectHk3Context context)
         {
-            _khachHang = context;
+            _context = context;
         }
 
-        // GET: api/KhachHangs
+        // GET: api/KhachHang
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KhachHang>>> GetKhachHangs()
+        public async Task<ActionResult<IEnumerable<KhachHangDTO>>> GetKhachHangs()
         {
-            return await _khachHang.KhachHangs.ToListAsync();
+            var khachHangDTOs = await _context.KhachHangs
+                .Select(kh => new KhachHangDTO
+                {
+                    MaKhachHang = kh.MaKhachHang,
+                    TenKhachHang = kh.TenKhachHang,
+                    DiaChi = kh.DiaChi,
+                    Email = kh.Email,
+                    SoDienThoai = kh.SoDienThoai,
+                    MaTaiKhoan = kh.MaTaiKhoan // Lấy MaTaiKhoan từ cơ sở dữ liệu
+                }).ToListAsync();
+
+            return khachHangDTOs;
         }
 
-        // GET: api/KhachHangs/5
+        // GET: api/KhachHang/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<KhachHang>> GetKhachHang(int id)
+        public async Task<ActionResult<KhachHangDTO>> GetKhachHang(int id)
         {
-            var khachHang = await _khachHang.KhachHangs.FindAsync(id);
+            var khachHang = await _context.KhachHangs.FindAsync(id);
 
             if (khachHang == null)
             {
                 return NotFound();
             }
 
-            return khachHang;
+            var khachHangDTO = new KhachHangDTO
+            {
+                MaKhachHang = khachHang.MaKhachHang,
+                TenKhachHang = khachHang.TenKhachHang,
+                DiaChi = khachHang.DiaChi,
+                Email = khachHang.Email,
+                SoDienThoai = khachHang.SoDienThoai,
+                MaTaiKhoan = khachHang.MaTaiKhoan // Lấy MaTaiKhoan từ cơ sở dữ liệu
+            };
+
+            return khachHangDTO;
         }
 
-        // PUT: api/KhachHangs/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutKhachHang(int id, KhachHang khachHang)
+        // POST: api/KhachHang
+        [HttpPost]
+        public async Task<IActionResult> PostKhachHang(KhachHangDTO khachHangDTO)
         {
-            if (id != khachHang.MaKhachHang)
+            // Tạo mới đối tượng KhachHang từ DTO
+            var khachHang = new KhachHang
+            {
+                TenKhachHang = khachHangDTO.TenKhachHang,
+                DiaChi = khachHangDTO.DiaChi,
+                Email = khachHangDTO.Email,
+                SoDienThoai = khachHangDTO.SoDienThoai,
+                MaTaiKhoan = khachHangDTO.MaTaiKhoan // Gán MaTaiKhoan từ DTO
+            };
+
+            // Thêm vào cơ sở dữ liệu
+            _context.KhachHangs.Add(khachHang);
+            await _context.SaveChangesAsync();
+
+            // Trả về 201 Created và thông tin của khách hàng mới
+            return CreatedAtAction(nameof(GetKhachHang), new { id = khachHang.MaKhachHang }, khachHang);
+        }
+
+        // PUT: api/KhachHang/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutKhachHang(int id, KhachHangDTO khachHangDTO)
+        {
+            if (id != khachHangDTO.MaKhachHang)
             {
                 return BadRequest();
             }
 
-            _khachHang.Entry(khachHang).State = EntityState.Modified;
+            var khachHang = await _context.KhachHangs.FindAsync(id);
+            if (khachHang == null)
+            {
+                return NotFound();
+            }
+
+            khachHang.TenKhachHang = khachHangDTO.TenKhachHang;
+            khachHang.DiaChi = khachHangDTO.DiaChi;
+            khachHang.Email = khachHangDTO.Email;
+            khachHang.SoDienThoai = khachHangDTO.SoDienThoai;
+            khachHang.MaTaiKhoan = khachHangDTO.MaTaiKhoan;
 
             try
             {
-                await _khachHang.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -69,35 +123,25 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // POST: api/KhachHangs
-        [HttpPost]
-        public async Task<ActionResult<KhachHang>> PostKhachHang(KhachHang khachHang)
-        {
-            _khachHang.KhachHangs.Add(khachHang);
-            await _khachHang.SaveChangesAsync();
-
-            return CreatedAtAction("GetKhachHang", new { id = khachHang.MaKhachHang }, khachHang);
-        }
-
-        // DELETE: api/KhachHangs/5
+        // DELETE: api/KhachHang/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteKhachHang(int id)
         {
-            var khachHang = await _khachHang.KhachHangs.FindAsync(id);
+            var khachHang = await _context.KhachHangs.FindAsync(id);
             if (khachHang == null)
             {
                 return NotFound();
             }
 
-            _khachHang.KhachHangs.Remove(khachHang);
-            await _khachHang.SaveChangesAsync();
+            _context.KhachHangs.Remove(khachHang);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool KhachHangExists(int id)
         {
-            return _khachHang.KhachHangs.Any(e => e.MaKhachHang == id);
+            return _context.KhachHangs.Any(e => e.MaKhachHang == id);
         }
     }
 }

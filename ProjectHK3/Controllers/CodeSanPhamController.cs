@@ -1,99 +1,130 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjectHK3.Models; // Đảm bảo thêm namespace của model
+using ProjectHK3.Models;
+using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-[Route("api/[controller]")]
-[ApiController]
-public class CodeSanPhamsController : ControllerBase
+
+namespace ProjectHK3.Controllers
 {
-    private readonly ProjectHk3Context _codeSanPham;
-
-    public CodeSanPhamsController(ProjectHk3Context context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CodeSanPhamController : ControllerBase
     {
-        _codeSanPham = context;
-    }
+        private readonly ProjectHk3Context _context;
 
-    // GET: api/CodeSanPhams
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CodeSanPham>>> GetCodeSanPhams()
-    {
-        return await _codeSanPham.CodeSanPhams.ToListAsync();
-    }
-
-    // GET: api/CodeSanPhams/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<CodeSanPham>> GetCodeSanPham(int id)
-    {
-        var codeSanPham = await _codeSanPham.CodeSanPhams.FindAsync(id);
-
-        if (codeSanPham == null)
+        public CodeSanPhamController(ProjectHk3Context context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        return codeSanPham;
-    }
-
-    // PUT: api/CodeSanPhams/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutCodeSanPham(int id, CodeSanPham codeSanPham)
-    {
-        if (id != codeSanPham.MaCode)
+        // GET: api/CodeSanPham
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CodeSanPhamDTO>>> GetCodeSanPhams()
         {
-            return BadRequest();
+            var codeSanPhamDTOs = await _context.CodeSanPhams
+                .Select(cs => new CodeSanPhamDTO
+                {
+                    MaCode = cs.MaCode,
+                    MaSanPham = (int)cs.MaSanPham
+                }).ToListAsync();
+
+            return codeSanPhamDTOs;
         }
 
-        _codeSanPham.Entry(codeSanPham).State = EntityState.Modified;
+        // GET: api/CodeSanPham/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CodeSanPhamDTO>> GetCodeSanPham(int id)
+        {
+            var codeSanPham = await _context.CodeSanPhams.FindAsync(id);
 
-        try
-        {
-            await _codeSanPham.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!CodeSanPhamExists(id))
+            if (codeSanPham == null)
             {
                 return NotFound();
             }
-            else
+
+            var codeSanPhamDTO = new CodeSanPhamDTO
             {
-                throw;
-            }
+                MaCode = codeSanPham.MaCode,
+                MaSanPham = (int)codeSanPham.MaSanPham
+            };
+
+            return codeSanPhamDTO;
         }
 
-        return NoContent();
-    }
-
-    // POST: api/CodeSanPhams
-    [HttpPost]
-    public async Task<ActionResult<CodeSanPham>> PostCodeSanPham(CodeSanPham codeSanPham)
-    {
-        _codeSanPham.CodeSanPhams.Add(codeSanPham);
-        await _codeSanPham.SaveChangesAsync();
-
-        return CreatedAtAction("GetCodeSanPham", new { id = codeSanPham.MaCode }, codeSanPham);
-    }
-
-    // DELETE: api/CodeSanPhams/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCodeSanPham(int id)
-    {
-        var codeSanPham = await _codeSanPham.CodeSanPhams.FindAsync(id);
-        if (codeSanPham == null)
+        // POST: api/CodeSanPham
+        [HttpPost]
+        public async Task<IActionResult> PostCodeSanPham(CodeSanPhamDTO codeSanPhamDTO)
         {
-            return NotFound();
+            var codeSanPham = new CodeSanPham
+            {
+                MaSanPham = codeSanPhamDTO.MaSanPham
+            };
+
+            _context.CodeSanPhams.Add(codeSanPham);
+            await _context.SaveChangesAsync();
+
+            // Không cần trả về CodeSanPhamDTO vì sau khi tạo, trigger sẽ tự động thêm MaCode vào CodeSanPham
+
+            return NoContent();
         }
 
-        _codeSanPham.CodeSanPhams.Remove(codeSanPham);
-        await _codeSanPham.SaveChangesAsync();
+        // PUT: api/CodeSanPham/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCodeSanPham(int id, CodeSanPhamDTO codeSanPhamDTO)
+        {
+            if (id != codeSanPhamDTO.MaCode)
+            {
+                return BadRequest();
+            }
 
-        return NoContent();
-    }
+            var codeSanPham = await _context.CodeSanPhams.FindAsync(id);
+            if (codeSanPham == null)
+            {
+                return NotFound();
+            }
 
-    private bool CodeSanPhamExists(int id)
-    {
-        return _codeSanPham.CodeSanPhams.Any(e => e.MaCode == id);
+            codeSanPham.MaSanPham = codeSanPhamDTO.MaSanPham;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CodeSanPhamExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/CodeSanPham/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCodeSanPham(int id)
+        {
+            var codeSanPham = await _context.CodeSanPhams.FindAsync(id);
+            if (codeSanPham == null)
+            {
+                return NotFound();
+            }
+
+            _context.CodeSanPhams.Remove(codeSanPham);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool CodeSanPhamExists(int id)
+        {
+            return _context.CodeSanPhams.Any(e => e.MaCode == id);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectHK3.Models;
+using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,95 +10,76 @@ namespace ProjectHK3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ThanhToansController : ControllerBase
+    public class ThanhToanController : ControllerBase
     {
-        private readonly ProjectHk3Context _thanhToan;
+        private readonly ProjectHk3Context _context;
 
-        public ThanhToansController(ProjectHk3Context context)
+        public ThanhToanController(ProjectHk3Context context)
         {
-            _thanhToan = context;
+            _context = context;
         }
 
-        // GET: api/ThanhToans
+        // GET: api/ThanhToan
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ThanhToan>>> GetThanhToans()
+        public async Task<ActionResult<IEnumerable<ThanhToanDTO>>> GetThanhToans()
         {
-            return await _thanhToan.ThanhToans.ToListAsync();
+            var thanhToans = await _context.ThanhToans
+                .Select(tt => new ThanhToanDTO
+                {
+                    MaThanhToan = tt.MaThanhToan,
+                    MaDonHang = tt.MaDonHang,
+                    MaKhachHang = tt.MaKhachHang,
+                    PhuongThucThanhToan = tt.PhuongThucThanhToan,
+                    ThoiGian = tt.ThoiGian
+                }).ToListAsync();
+
+            return thanhToans;
         }
 
-        // GET: api/ThanhToans/5
+        // GET: api/ThanhToan/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ThanhToan>> GetThanhToan(int id)
+        public async Task<ActionResult<ThanhToanDTO>> GetThanhToan(int id)
         {
-            var thanhToan = await _thanhToan.ThanhToans.FindAsync(id);
+            var thanhToan = await _context.ThanhToans.FindAsync(id);
 
             if (thanhToan == null)
             {
                 return NotFound();
             }
 
-            return thanhToan;
+            var thanhToanDTO = new ThanhToanDTO
+            {
+                MaThanhToan = thanhToan.MaThanhToan,
+                MaDonHang = thanhToan.MaDonHang,
+                MaKhachHang = thanhToan.MaKhachHang,
+                PhuongThucThanhToan = thanhToan.PhuongThucThanhToan,
+                ThoiGian = thanhToan.ThoiGian
+            };
+
+            return thanhToanDTO;
         }
 
-        // PUT: api/ThanhToans/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutThanhToan(int id, ThanhToan thanhToan)
-        {
-            if (id != thanhToan.MaThanhToan)
-            {
-                return BadRequest();
-            }
-
-            _thanhToan.Entry(thanhToan).State = EntityState.Modified;
-
-            try
-            {
-                await _thanhToan.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ThanhToanExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/ThanhToans
+        // POST: api/ThanhToan
         [HttpPost]
-        public async Task<ActionResult<ThanhToan>> PostThanhToan(ThanhToan thanhToan)
+        public async Task<ActionResult<ThanhToanDTO>> PostThanhToan(ThanhToanDTO thanhToanDTO)
         {
-            _thanhToan.ThanhToans.Add(thanhToan);
-            await _thanhToan.SaveChangesAsync();
-
-            return CreatedAtAction("GetThanhToan", new { id = thanhToan.MaThanhToan }, thanhToan);
-        }
-
-        // DELETE: api/ThanhToans/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteThanhToan(int id)
-        {
-            var thanhToan = await _thanhToan.ThanhToans.FindAsync(id);
-            if (thanhToan == null)
+            var thanhToan = new ThanhToan
             {
-                return NotFound();
-            }
+                MaDonHang = thanhToanDTO.MaDonHang,
+                MaKhachHang = thanhToanDTO.MaKhachHang,
+                PhuongThucThanhToan = thanhToanDTO.PhuongThucThanhToan,
+                ThoiGian = thanhToanDTO.ThoiGian
+            };
 
-            _thanhToan.ThanhToans.Remove(thanhToan);
-            await _thanhToan.SaveChangesAsync();
+            _context.ThanhToans.Add(thanhToan);
+            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetThanhToan), new { id = thanhToan.MaThanhToan }, thanhToanDTO);
         }
 
         private bool ThanhToanExists(int id)
         {
-            return _thanhToan.ThanhToans.Any(e => e.MaThanhToan == id);
+            return _context.ThanhToans.Any(e => e.MaThanhToan == id);
         }
     }
 }

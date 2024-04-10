@@ -15,7 +15,11 @@ public partial class KhachHang
 
     public string? SoDienThoai { get; set; }
 
+    public int MaTaiKhoan { get; set; }
+
     public virtual ICollection<DonDatHang> DonDatHangs { get; set; } = new List<DonDatHang>();
+
+    public virtual TaiKhoanMatKhau MaTaiKhoanNavigation { get; set; } = null!;
 
     public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
 }

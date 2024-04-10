@@ -15,7 +15,11 @@ public partial class SanPham
 
     public decimal Gia { get; set; }
 
+    public int? MaLoai { get; set; }
+
     public virtual ICollection<CodeSanPham> CodeSanPhams { get; set; } = new List<CodeSanPham>();
 
     public virtual ICollection<DonDatHang> DonDatHangs { get; set; } = new List<DonDatHang>();
+
+    public virtual LoaiSanPham? MaLoaiNavigation { get; set; }
 }

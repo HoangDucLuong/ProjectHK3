@@ -11,15 +11,17 @@ public partial class DonDatHang
 
     public int? MaSanPham { get; set; }
 
-    public int SoLuongSanPham { get; set; }
-
     public int LoaiGiaoHang { get; set; }
 
     public DateTime NgayDat { get; set; }
 
     public string ThanhToan { get; set; } = null!;
 
+    public int? MaLoaiGiaoHang { get; set; }
+
     public virtual KhachHang? MaKhachHangNavigation { get; set; }
+
+    public virtual LoaiGiaoHang? MaLoaiGiaoHangNavigation { get; set; }
 
     public virtual SanPham? MaSanPhamNavigation { get; set; }
 

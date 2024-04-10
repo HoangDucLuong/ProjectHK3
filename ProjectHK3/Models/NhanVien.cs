@@ -9,7 +9,7 @@ public partial class NhanVien
 
     public string TenNhanVien { get; set; } = null!;
 
-    public string TaiKhoan { get; set; } = null!;
+    public int MaTaiKhoan { get; set; }
 
-    public string MatKhau { get; set; } = null!;
+    public virtual TaiKhoanMatKhau MaTaiKhoanNavigation { get; set; } = null!;
 }

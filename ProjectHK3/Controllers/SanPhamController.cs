@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectHK3.Models;
+using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,50 +10,103 @@ namespace ProjectHK3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SanPhamsController : ControllerBase
+    public class SanPhamController : ControllerBase
     {
-        private readonly ProjectHk3Context _sanPham;
+        private readonly ProjectHk3Context _context;
 
-        public SanPhamsController(ProjectHk3Context context)
+        public SanPhamController(ProjectHk3Context context)
         {
-            _sanPham = context;
+            _context = context;
         }
 
-        // GET: api/SanPhams
+        // GET: api/SanPham
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SanPham>>> GetSanPhams()
+        public async Task<ActionResult<IEnumerable<SanPhamDTO>>> GetSanPhams()
         {
-            return await _sanPham.SanPhams.ToListAsync();
+            var sanPhamDTOs = await _context.SanPhams
+                .Select(sp => new SanPhamDTO
+                {
+                    MaSanPham = sp.MaSanPham,
+                    MaSoSanPham = sp.MaSoSanPham,
+                    TenSanPham = sp.TenSanPham,
+                    MoTaSanPham = sp.MoTaSanPham,
+                    Gia = sp.Gia,
+                    MaLoai = sp.MaLoai
+                }).ToListAsync();
+
+            return sanPhamDTOs;
         }
 
-        // GET: api/SanPhams/5
+        // GET: api/SanPham/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SanPham>> GetSanPham(int id)
+        public async Task<ActionResult<SanPhamDTO>> GetSanPham(int id)
         {
-            var sanPham = await _sanPham.SanPhams.FindAsync(id);
+            var sanPham = await _context.SanPhams.FindAsync(id);
 
             if (sanPham == null)
             {
                 return NotFound();
             }
 
-            return sanPham;
+            var sanPhamDTO = new SanPhamDTO
+            {
+                MaSanPham = sanPham.MaSanPham,
+                MaSoSanPham = sanPham.MaSoSanPham,
+                TenSanPham = sanPham.TenSanPham,
+                MoTaSanPham = sanPham.MoTaSanPham,
+                Gia = sanPham.Gia,
+                MaLoai = sanPham.MaLoai
+            };
+
+            return sanPhamDTO;
         }
 
-        // PUT: api/SanPhams/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSanPham(int id, SanPham sanPham)
+        // POST: api/SanPham
+        [HttpPost]
+        public async Task<IActionResult> PostSanPham(SanPhamDTO sanPhamDTO)
         {
-            if (id != sanPham.MaSanPham)
+            // Tạo mới đối tượng SanPham từ DTO
+            var sanPham = new SanPham
+            {
+                MaSoSanPham = sanPhamDTO.MaSoSanPham,
+                TenSanPham = sanPhamDTO.TenSanPham,
+                MoTaSanPham = sanPhamDTO.MoTaSanPham,
+                Gia = sanPhamDTO.Gia,
+                MaLoai = sanPhamDTO.MaLoai
+            };
+
+            // Thêm vào cơ sở dữ liệu
+            _context.SanPhams.Add(sanPham);
+            await _context.SaveChangesAsync();
+
+            // Trả về 201 Created và thông tin của sản phẩm mới
+            return CreatedAtAction(nameof(GetSanPham), new { id = sanPham.MaSanPham }, sanPham);
+        }
+
+        // PUT: api/SanPham/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutSanPham(int id, SanPhamDTO sanPhamDTO)
+        {
+            if (id != sanPhamDTO.MaSanPham)
             {
                 return BadRequest();
             }
 
-            _sanPham.Entry(sanPham).State = EntityState.Modified;
+            var sanPham = await _context.SanPhams.FindAsync(id);
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            sanPham.MaSoSanPham = sanPhamDTO.MaSoSanPham;
+            sanPham.TenSanPham = sanPhamDTO.TenSanPham;
+            sanPham.MoTaSanPham = sanPhamDTO.MoTaSanPham;
+            sanPham.Gia = sanPhamDTO.Gia;
+            sanPham.MaLoai = sanPhamDTO.MaLoai;
 
             try
             {
-                await _sanPham.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -69,35 +123,25 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // POST: api/SanPhams
-        [HttpPost]
-        public async Task<ActionResult<SanPham>> PostSanPham(SanPham sanPham)
-        {
-            _sanPham.SanPhams.Add(sanPham);
-            await _sanPham.SaveChangesAsync();
-
-            return CreatedAtAction("GetSanPham", new { id = sanPham.MaSanPham }, sanPham);
-        }
-
-        // DELETE: api/SanPhams/5
+        // DELETE: api/SanPham/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSanPham(int id)
         {
-            var sanPham = await _sanPham.SanPhams.FindAsync(id);
+            var sanPham = await _context.SanPhams.FindAsync(id);
             if (sanPham == null)
             {
                 return NotFound();
             }
 
-            _sanPham.SanPhams.Remove(sanPham);
-            await _sanPham.SaveChangesAsync();
+            _context.SanPhams.Remove(sanPham);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool SanPhamExists(int id)
         {
-            return _sanPham.SanPhams.Any(e => e.MaSanPham == id);
+            return _context.SanPhams.Any(e => e.MaSanPham == id);
         }
     }
 }

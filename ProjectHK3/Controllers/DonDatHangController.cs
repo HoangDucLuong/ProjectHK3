@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectHK3.Models;
+using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,95 +10,83 @@ namespace ProjectHK3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DonDatHangsController : ControllerBase
+    public class DonDatHangController : ControllerBase
     {
-        private readonly ProjectHk3Context _donDatHang;
+        private readonly ProjectHk3Context _context;
 
-        public DonDatHangsController(ProjectHk3Context context)
+        public DonDatHangController(ProjectHk3Context context)
         {
-            _donDatHang = context;
+            _context = context;
         }
 
-        // GET: api/DonDatHangs
+        // GET: api/DonDatHang
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DonDatHang>>> GetDonDatHangs()
+        public async Task<ActionResult<IEnumerable<DonDatHangDTO>>> GetDonDatHangs()
         {
-            return await _donDatHang.DonDatHangs.ToListAsync();
+            var donDatHangs = await _context.DonDatHangs
+                .Select(ddh => new DonDatHangDTO
+                {
+                    MaDonHang = ddh.MaDonHang,
+                    MaKhachHang = ddh.MaKhachHang,
+                    MaSanPham = ddh.MaSanPham,
+                    LoaiGiaoHang = ddh.LoaiGiaoHang,
+                    NgayDat = ddh.NgayDat,
+                    ThanhToan = ddh.ThanhToan,
+                    MaLoaiGiaoHang = ddh.MaLoaiGiaoHang
+                }).ToListAsync();
+
+            return donDatHangs;
         }
 
-        // GET: api/DonDatHangs/5
+        // GET: api/DonDatHang/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DonDatHang>> GetDonDatHang(string id)
+        public async Task<ActionResult<DonDatHangDTO>> GetDonDatHang(string id)
         {
-            var donDatHang = await _donDatHang.DonDatHangs.FindAsync(id);
+            var donDatHang = await _context.DonDatHangs.FindAsync(id);
 
             if (donDatHang == null)
             {
                 return NotFound();
             }
 
-            return donDatHang;
+            var donDatHangDTO = new DonDatHangDTO
+            {
+                MaDonHang = donDatHang.MaDonHang,
+                MaKhachHang = donDatHang.MaKhachHang,
+                MaSanPham = donDatHang.MaSanPham,
+                LoaiGiaoHang = donDatHang.LoaiGiaoHang,
+                NgayDat = donDatHang.NgayDat,
+                ThanhToan = donDatHang.ThanhToan,
+                MaLoaiGiaoHang = donDatHang.MaLoaiGiaoHang
+            };
+
+            return donDatHangDTO;
         }
 
-        // PUT: api/DonDatHangs/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDonDatHang(string id, DonDatHang donDatHang)
-        {
-            if (id != donDatHang.MaDonHang)
-            {
-                return BadRequest();
-            }
-
-            _donDatHang.Entry(donDatHang).State = EntityState.Modified;
-
-            try
-            {
-                await _donDatHang.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DonDatHangExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/DonDatHangs
+        // POST: api/DonDatHang
         [HttpPost]
-        public async Task<ActionResult<DonDatHang>> PostDonDatHang(DonDatHang donDatHang)
+        public async Task<ActionResult<DonDatHangDTO>> PostDonDatHang(DonDatHangDTO donDatHangDTO)
         {
-            _donDatHang.DonDatHangs.Add(donDatHang);
-            await _donDatHang.SaveChangesAsync();
-
-            return CreatedAtAction("GetDonDatHang", new { id = donDatHang.MaDonHang }, donDatHang);
-        }
-
-        // DELETE: api/DonDatHangs/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDonDatHang(string id)
-        {
-            var donDatHang = await _donDatHang.DonDatHangs.FindAsync(id);
-            if (donDatHang == null)
+            var donDatHang = new DonDatHang
             {
-                return NotFound();
-            }
+                MaDonHang = donDatHangDTO.MaDonHang,
+                MaKhachHang = donDatHangDTO.MaKhachHang,
+                MaSanPham = donDatHangDTO.MaSanPham,
+                LoaiGiaoHang = donDatHangDTO.LoaiGiaoHang,
+                NgayDat = donDatHangDTO.NgayDat,
+                ThanhToan = donDatHangDTO.ThanhToan,
+                MaLoaiGiaoHang = donDatHangDTO.MaLoaiGiaoHang
+            };
 
-            _donDatHang.DonDatHangs.Remove(donDatHang);
-            await _donDatHang.SaveChangesAsync();
+            _context.DonDatHangs.Add(donDatHang);
+            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return CreatedAtAction(nameof(GetDonDatHang), new { id = donDatHang.MaDonHang }, donDatHangDTO);
         }
 
         private bool DonDatHangExists(string id)
         {
-            return _donDatHang.DonDatHangs.Any(e => e.MaDonHang == id);
+            return _context.DonDatHangs.Any(e => e.MaDonHang == id);
         }
     }
 }
