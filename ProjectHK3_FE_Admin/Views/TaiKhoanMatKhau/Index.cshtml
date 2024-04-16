@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ProjectHK3_FE_Admin.Models.TaiKhoanMatKhauViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Number
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaiKhoan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MatKhau)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rowNumber = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @rowNumber
+                    @{
+                        rowNumber++;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaiKhoan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatKhau)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.MaTaiKhoan }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.MaTaiKhoan }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.MaTaiKhoan })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

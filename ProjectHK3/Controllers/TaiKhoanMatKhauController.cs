@@ -1,68 +1,106 @@
-﻿    using Microsoft.AspNetCore.Mvc;
-    using ProjectHK3.Models;
-    using ProjectHK3.DTOs;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjectHK3.Models;
+using ProjectHK3.DTOs;
+using System.Collections.Generic;
+using System.Linq;
 
-    namespace ProjectHK3.Controllers
+namespace ProjectHK3.Controllers
+{
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public class TaiKhoanMatKhauController : ControllerBase
     {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class TaiKhoanMatKhauController : ControllerBase
+        private readonly ProjectHk3Context _context;
+
+        public TaiKhoanMatKhauController(ProjectHk3Context context)
         {
-            private readonly ProjectHk3Context _context;
+            _context = context;
+        }
 
-            public TaiKhoanMatKhauController(ProjectHk3Context context)
+        // GET: api/TaiKhoanMatKhau
+        [HttpGet]
+        public ActionResult<IEnumerable<TaiKhoanMatKhauDTO>> GetTaiKhoanMatKhau()
+        {
+            var taiKhoanMatKhauDTOs = _context.TaiKhoanMatKhaus.Select(tk => new TaiKhoanMatKhauDTO
             {
-                _context = context;
+                MaTaiKhoan = tk.MaTaiKhoan,
+                TaiKhoan = tk.TaiKhoan,
+                MatKhau = tk.MatKhau,
+                Role = tk.Role
+            }).ToList();
+
+            return taiKhoanMatKhauDTOs;
+        }
+
+        // GET: api/TaiKhoanMatKhau/5
+        [HttpGet("{id}")]
+        public ActionResult<TaiKhoanMatKhauDTO> GetTaiKhoanMatKhau(int id)
+        {
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
+
+            if (taiKhoanMatKhau == null)
+            {
+                return NotFound();
             }
 
-            // GET: api/TaiKhoanMatKhau
-            [HttpGet]
-            public ActionResult<IEnumerable<TaiKhoanMatKhauDTO>> GetTaiKhoanMatKhau()
+            var taiKhoanMatKhauDTO = new TaiKhoanMatKhauDTO
             {
-                var taiKhoanMatKhauDTOs = _context.TaiKhoanMatKhaus.Select(tk => new TaiKhoanMatKhauDTO
-                {
-                    MaTaiKhoan = tk.MaTaiKhoan,
-                    TaiKhoan = tk.TaiKhoan,
-                    MatKhau = tk.MatKhau,
-                    Role = tk.Role.ToString() // Chuyển đổi enum Role thành string
-                }).ToList();
+                MaTaiKhoan = taiKhoanMatKhau.MaTaiKhoan,
+                TaiKhoan = taiKhoanMatKhau.TaiKhoan,
+                MatKhau = taiKhoanMatKhau.MatKhau,
+                Role = taiKhoanMatKhau.Role
+            };
 
-                return taiKhoanMatKhauDTOs;
+            return taiKhoanMatKhauDTO;
+        }
+
+        // PUT: api/TaiKhoanMatKhau/5
+        [HttpPut("{id}")]
+        public IActionResult PutTaiKhoanMatKhau(int id, TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
+        {
+            if (id != taiKhoanMatKhauDTO.MaTaiKhoan)
+            {
+                return BadRequest();
             }
 
-            // GET: api/TaiKhoanMatKhau/5
-            [HttpGet("{id}")]
-            public ActionResult<TaiKhoanMatKhauDTO> GetTaiKhoanMatKhau(int id)
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
+            if (taiKhoanMatKhau == null)
             {
-                var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
-
-                if (taiKhoanMatKhau == null)
-                {
-                    return NotFound();
-                }
-
-                var taiKhoanMatKhauDTO = new TaiKhoanMatKhauDTO
-                {
-                    MaTaiKhoan = taiKhoanMatKhau.MaTaiKhoan,
-                    TaiKhoan = taiKhoanMatKhau.TaiKhoan,
-                    MatKhau = taiKhoanMatKhau.MatKhau,
-                    Role = taiKhoanMatKhau.Role.ToString()
-                };
-
-                return taiKhoanMatKhauDTO;
+                return NotFound();
             }
 
+            taiKhoanMatKhau.TaiKhoan = taiKhoanMatKhauDTO.TaiKhoan;
+            taiKhoanMatKhau.MatKhau = taiKhoanMatKhauDTO.MatKhau;
+            taiKhoanMatKhau.Role = taiKhoanMatKhauDTO.Role;
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
         // POST: api/TaiKhoanMatKhau
         [HttpPost]
         public ActionResult<TaiKhoanMatKhauDTO> PostTaiKhoanMatKhau(TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
         {
+            if (taiKhoanMatKhauDTO == null)
+            {
+                return BadRequest("Invalid data provided");
+            }
+
+            if (string.IsNullOrEmpty(taiKhoanMatKhauDTO.TaiKhoan) || string.IsNullOrEmpty(taiKhoanMatKhauDTO.MatKhau))
+            {
+                return BadRequest("TaiKhoan and MatKhau are required fields");
+            }
+
+            if (taiKhoanMatKhauDTO.Role <= 0)
+            {
+                return BadRequest("Role must be a valid integer");
+            }
+
             var taiKhoanMatKhau = new TaiKhoanMatKhau
             {
                 TaiKhoan = taiKhoanMatKhauDTO.TaiKhoan,
                 MatKhau = taiKhoanMatKhauDTO.MatKhau,
-                Role = string.IsNullOrEmpty(taiKhoanMatKhauDTO.Role) ? 3 : int.Parse(taiKhoanMatKhauDTO.Role) // Gán giá trị mặc định là 3 nếu Role không được cung cấp
+                Role = taiKhoanMatKhauDTO.Role
             };
 
             _context.TaiKhoanMatKhaus.Add(taiKhoanMatKhau);
@@ -72,44 +110,21 @@
             return CreatedAtAction(nameof(GetTaiKhoanMatKhau), new { id = taiKhoanMatKhauDTO.MaTaiKhoan }, taiKhoanMatKhauDTO);
         }
 
-        // PUT: api/TaiKhoanMatKhau/5
-        [HttpPut("{id}")]
-            public IActionResult PutTaiKhoanMatKhau(int id, TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
+
+        // DELETE: api/TaiKhoanMatKhau/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTaiKhoanMatKhau(int id)
+        {
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
+            if (taiKhoanMatKhau == null)
             {
-                if (id != taiKhoanMatKhauDTO.MaTaiKhoan)
-                {
-                    return BadRequest();
-                }
-
-                var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
-                if (taiKhoanMatKhau == null)
-                {
-                    return NotFound();
-                }
-
-                taiKhoanMatKhau.TaiKhoan = taiKhoanMatKhauDTO.TaiKhoan;
-                taiKhoanMatKhau.MatKhau = taiKhoanMatKhauDTO.MatKhau;
-                taiKhoanMatKhau.Role = int.Parse(taiKhoanMatKhauDTO.Role);
-
-                _context.SaveChanges();
-
-                return NoContent();
+                return NotFound();
             }
 
-            // DELETE: api/TaiKhoanMatKhau/5
-            [HttpDelete("{id}")]
-            public IActionResult DeleteTaiKhoanMatKhau(int id)
-            {
-                var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
-                if (taiKhoanMatKhau == null)
-                {
-                    return NotFound();
-                }
+            _context.TaiKhoanMatKhaus.Remove(taiKhoanMatKhau);
+            _context.SaveChanges();
 
-                _context.TaiKhoanMatKhaus.Remove(taiKhoanMatKhau);
-                _context.SaveChanges();
-
-                return NoContent();
-            }
+            return NoContent();
         }
     }
+}
