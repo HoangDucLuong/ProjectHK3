@@ -84,15 +84,15 @@ namespace ProjectHK3.Controllers
         }
 
         // PUT: api/SanPham/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSanPham(int id, SanPhamDTO sanPhamDTO)
+        [HttpPut]
+        public async Task<IActionResult> PutSanPham(SanPhamDTO sanPhamDTO)
         {
-            if (id != sanPhamDTO.MaSanPham)
+            if (sanPhamDTO == null || sanPhamDTO.MaSanPham == null)
             {
                 return BadRequest();
             }
 
-            var sanPham = await _context.SanPhams.FindAsync(id);
+            var sanPham = await _context.SanPhams.FindAsync(sanPhamDTO.MaSanPham);
             if (sanPham == null)
             {
                 return NotFound();
@@ -110,7 +110,7 @@ namespace ProjectHK3.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SanPhamExists(id))
+                if (!SanPhamExists(sanPhamDTO.MaSanPham))
                 {
                     return NotFound();
                 }
@@ -123,11 +123,17 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
+
         // DELETE: api/SanPham/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSanPham(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSanPham(SanPhamDTO sanPhamDTO)
         {
-            var sanPham = await _context.SanPhams.FindAsync(id);
+            if (sanPhamDTO == null || sanPhamDTO.MaSanPham == null)
+            {
+                return BadRequest();
+            }
+
+            var sanPham = await _context.SanPhams.FindAsync(sanPhamDTO.MaSanPham);
             if (sanPham == null)
             {
                 return NotFound();
@@ -138,6 +144,7 @@ namespace ProjectHK3.Controllers
 
             return NoContent();
         }
+
 
         private bool SanPhamExists(int id)
         {

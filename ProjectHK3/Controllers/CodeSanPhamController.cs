@@ -70,16 +70,16 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // PUT: api/CodeSanPham/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCodeSanPham(int id, CodeSanPhamDTO codeSanPhamDTO)
+        // PUT: api/CodeSanPham
+        [HttpPut]
+        public async Task<IActionResult> PutCodeSanPham(CodeSanPhamDTO codeSanPhamDTO)
         {
-            if (id != codeSanPhamDTO.MaCode)
+            if (codeSanPhamDTO == null)
             {
                 return BadRequest();
             }
 
-            var codeSanPham = await _context.CodeSanPhams.FindAsync(id);
+            var codeSanPham = await _context.CodeSanPhams.FindAsync(codeSanPhamDTO.MaCode);
             if (codeSanPham == null)
             {
                 return NotFound();
@@ -93,7 +93,7 @@ namespace ProjectHK3.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CodeSanPhamExists(id))
+                if (!CodeSanPhamExists(codeSanPhamDTO.MaCode))
                 {
                     return NotFound();
                 }
@@ -106,8 +106,8 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // DELETE: api/CodeSanPham/5
-        [HttpDelete("{id}")]
+        // DELETE: api/CodeSanPham
+        [HttpDelete]
         public async Task<IActionResult> DeleteCodeSanPham(int id)
         {
             var codeSanPham = await _context.CodeSanPhams.FindAsync(id);

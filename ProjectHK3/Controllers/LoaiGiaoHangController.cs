@@ -64,16 +64,16 @@ namespace ProjectHK3.Controllers
             return CreatedAtAction(nameof(GetLoaiGiaoHang), new { id = loaiGiaoHang.MaLoaiGiaoHang }, loaiGiaoHangDTO);
         }
 
-        // PUT: api/LoaiGiaoHang/5
-        [HttpPut("{id}")]
-        public IActionResult PutLoaiGiaoHang(int id, LoaiGiaoHangDTO loaiGiaoHangDTO)
+        // PUT: api/LoaiGiaoHang
+        [HttpPut]
+        public IActionResult PutLoaiGiaoHang(LoaiGiaoHangDTO loaiGiaoHangDTO)
         {
-            if (id != loaiGiaoHangDTO.MaLoaiGiaoHang)
+            if (loaiGiaoHangDTO == null)
             {
                 return BadRequest();
             }
 
-            var loaiGiaoHang = _context.LoaiGiaoHangs.Find(id);
+            var loaiGiaoHang = _context.LoaiGiaoHangs.Find(loaiGiaoHangDTO.MaLoaiGiaoHang);
             if (loaiGiaoHang == null)
             {
                 return NotFound();
@@ -87,7 +87,7 @@ namespace ProjectHK3.Controllers
             }
             catch (Exception)
             {
-                if (!LoaiGiaoHangExists(id))
+                if (!LoaiGiaoHangExists(loaiGiaoHangDTO.MaLoaiGiaoHang))
                 {
                     return NotFound();
                 }
@@ -100,8 +100,8 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // DELETE: api/LoaiGiaoHang/5
-        [HttpDelete("{id}")]
+        // DELETE: api/LoaiGiaoHang
+        [HttpDelete]
         public IActionResult DeleteLoaiGiaoHang(int id)
         {
             var loaiGiaoHang = _context.LoaiGiaoHangs.Find(id);

@@ -38,7 +38,7 @@ namespace ProjectHK3.Controllers
             return donDatHangs;
         }
 
-        // GET: api/DonDatHang/5
+        // GET: api/DonDatHang
         [HttpGet("{id}")]
         public async Task<ActionResult<DonDatHangDTO>> GetDonDatHang(string id)
         {

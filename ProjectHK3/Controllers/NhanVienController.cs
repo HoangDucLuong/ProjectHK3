@@ -75,15 +75,15 @@ namespace ProjectHK3.Controllers
         }
 
         // PUT: api/NhanVien/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutNhanVien(int id, NhanVienDTO nhanVienDTO)
+        [HttpPut]
+        public async Task<IActionResult> PutNhanVien(NhanVienDTO nhanVienDTO)
         {
-            if (id != nhanVienDTO.MaNhanVien)
+            if (nhanVienDTO == null || nhanVienDTO.MaNhanVien == null)
             {
                 return BadRequest();
             }
 
-            var nhanVien = await _context.NhanViens.FindAsync(id);
+            var nhanVien = await _context.NhanViens.FindAsync(nhanVienDTO.MaNhanVien);
             if (nhanVien == null)
             {
                 return NotFound();
@@ -98,7 +98,7 @@ namespace ProjectHK3.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!NhanVienExists(id))
+                if (!NhanVienExists(nhanVienDTO.MaNhanVien))
                 {
                     return NotFound();
                 }
@@ -111,11 +111,17 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
+
         // DELETE: api/NhanVien/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNhanVien(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteNhanVien(NhanVienDTO nhanVienDTO)
         {
-            var nhanVien = await _context.NhanViens.FindAsync(id);
+            if (nhanVienDTO == null || nhanVienDTO.MaNhanVien == null)
+            {
+                return BadRequest();
+            }
+
+            var nhanVien = await _context.NhanViens.FindAsync(nhanVienDTO.MaNhanVien);
             if (nhanVien == null)
             {
                 return NotFound();
@@ -126,6 +132,7 @@ namespace ProjectHK3.Controllers
 
             return NoContent();
         }
+
 
         private bool NhanVienExists(int id)
         {

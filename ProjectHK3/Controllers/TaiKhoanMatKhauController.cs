@@ -55,15 +55,15 @@ namespace ProjectHK3.Controllers
         }
 
         // PUT: api/TaiKhoanMatKhau/5
-        [HttpPut("{id}")]
-        public IActionResult PutTaiKhoanMatKhau(int id, TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
+        [HttpPut]
+        public IActionResult PutTaiKhoanMatKhau(TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
         {
-            if (id != taiKhoanMatKhauDTO.MaTaiKhoan)
+            if (taiKhoanMatKhauDTO == null || taiKhoanMatKhauDTO.MaTaiKhoan <= 0)
             {
-                return BadRequest();
+                return BadRequest("Invalid data provided");
             }
 
-            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(taiKhoanMatKhauDTO.MaTaiKhoan);
             if (taiKhoanMatKhau == null)
             {
                 return NotFound();
@@ -77,6 +77,7 @@ namespace ProjectHK3.Controllers
 
             return NoContent();
         }
+
         // POST: api/TaiKhoanMatKhau
         [HttpPost]
         public ActionResult<TaiKhoanMatKhauDTO> PostTaiKhoanMatKhau(TaiKhoanMatKhauDTO taiKhoanMatKhauDTO)
@@ -112,10 +113,10 @@ namespace ProjectHK3.Controllers
 
 
         // DELETE: api/TaiKhoanMatKhau/5
-        [HttpDelete("{id}")]
-        public IActionResult DeleteTaiKhoanMatKhau(int id)
+        [HttpDelete]
+        public IActionResult DeleteTaiKhoanMatKhau()
         {
-            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.FirstOrDefault();
             if (taiKhoanMatKhau == null)
             {
                 return NotFound();
@@ -126,5 +127,6 @@ namespace ProjectHK3.Controllers
 
             return NoContent();
         }
+
     }
 }

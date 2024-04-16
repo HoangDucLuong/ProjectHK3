@@ -83,16 +83,16 @@ namespace ProjectHK3.Controllers
             return CreatedAtAction(nameof(GetKhachHang), new { id = khachHang.MaKhachHang }, khachHang);
         }
 
-        // PUT: api/KhachHang/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutKhachHang(int id, KhachHangDTO khachHangDTO)
+        // PUT: api/KhachHang
+        [HttpPut]
+        public async Task<IActionResult> PutKhachHang(KhachHangDTO khachHangDTO)
         {
-            if (id != khachHangDTO.MaKhachHang)
+            if (khachHangDTO == null)
             {
                 return BadRequest();
             }
 
-            var khachHang = await _context.KhachHangs.FindAsync(id);
+            var khachHang = await _context.KhachHangs.FindAsync(khachHangDTO.MaKhachHang);
             if (khachHang == null)
             {
                 return NotFound();
@@ -110,7 +110,7 @@ namespace ProjectHK3.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!KhachHangExists(id))
+                if (!KhachHangExists(khachHangDTO.MaKhachHang))
                 {
                     return NotFound();
                 }
@@ -123,8 +123,8 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
-        // DELETE: api/KhachHang/5
-        [HttpDelete("{id}")]
+        // DELETE: api/KhachHang
+        [HttpDelete]
         public async Task<IActionResult> DeleteKhachHang(int id)
         {
             var khachHang = await _context.KhachHangs.FindAsync(id);

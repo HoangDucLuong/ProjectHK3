@@ -72,15 +72,15 @@ namespace ProjectHK3.Controllers
         }
 
         // PUT: api/LoaiSanPham/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLoaiSanPham(int id, LoaiSanPhamDTO loaiSanPhamDTO)
+        [HttpPut]
+        public async Task<IActionResult> PutLoaiSanPham(LoaiSanPhamDTO loaiSanPhamDTO)
         {
-            if (id != loaiSanPhamDTO.MaLoai)
+            if (loaiSanPhamDTO == null || loaiSanPhamDTO.MaLoai == null)
             {
                 return BadRequest();
             }
 
-            var loaiSanPham = await _context.LoaiSanPhams.FindAsync(id);
+            var loaiSanPham = await _context.LoaiSanPhams.FindAsync(loaiSanPhamDTO.MaLoai);
             if (loaiSanPham == null)
             {
                 return NotFound();
@@ -94,7 +94,7 @@ namespace ProjectHK3.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!LoaiSanPhamExists(id))
+                if (!LoaiSanPhamExists(loaiSanPhamDTO.MaLoai))
                 {
                     return NotFound();
                 }
@@ -107,8 +107,9 @@ namespace ProjectHK3.Controllers
             return NoContent();
         }
 
+
         // DELETE: api/LoaiSanPham/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteLoaiSanPham(int id)
         {
             var loaiSanPham = await _context.LoaiSanPhams.FindAsync(id);

@@ -86,7 +86,7 @@ namespace ProjectHK3_FE_Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TaiKhoanMatKhauViewModel model)
+        public IActionResult Edit(int id, TaiKhoanMatKhauViewModel model)
         {
             try
             {
@@ -98,11 +98,11 @@ namespace ProjectHK3_FE_Admin.Controllers
 
                 string data = JsonConvert.SerializeObject(model);
                 StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = _client.PutAsync(_client.BaseAddress + "/TaiKhoanMatKhau/PutTaiKhoanMatKhau", content).Result;
+                HttpResponseMessage response = _client.PutAsync($"{_client.BaseAddress}/TaiKhoanMatKhau/PutTaiKhoanMatKhau", content).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["successMessage"] = "Tai khoan da duoc sua.";
+                    TempData["successMessage"] = "Tài khoản đã được cập nhật.";
                     return RedirectToAction("Index");
                 }
                 else
