@@ -113,10 +113,10 @@ namespace ProjectHK3.Controllers
 
 
         // DELETE: api/TaiKhoanMatKhau/5
-        [HttpDelete]
-        public IActionResult DeleteTaiKhoanMatKhau()
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTaiKhoanMatKhau(int id)
         {
-            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.FirstOrDefault();
+            var taiKhoanMatKhau = _context.TaiKhoanMatKhaus.Find(id);
             if (taiKhoanMatKhau == null)
             {
                 return NotFound();

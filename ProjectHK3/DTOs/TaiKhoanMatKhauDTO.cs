@@ -4,9 +4,9 @@
     {
         public int MaTaiKhoan { get; set; }
 
-        public string TaiKhoan { get; set; }
+        public required string TaiKhoan { get; set; }
 
-        public string MatKhau { get; set; }
+        public required string MatKhau { get; set; }
 
         public int Role { get; set; }
     }

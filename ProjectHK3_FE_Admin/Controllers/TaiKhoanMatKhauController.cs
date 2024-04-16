@@ -120,6 +120,56 @@ namespace ProjectHK3_FE_Admin.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                // Gửi yêu cầu GET để lấy thông tin của tài khoản cần xóa
+                HttpResponseMessage response = _client.GetAsync($"{_client.BaseAddress}/TaiKhoanMatKhau/GetTaiKhoanMatKhau/{id}").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = response.Content.ReadAsStringAsync().Result;
+                    TaiKhoanMatKhauViewModel model = JsonConvert.DeserializeObject<TaiKhoanMatKhauViewModel>(data);
+                    return View(model);
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Không tìm thấy tài khoản để xóa.";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = _client.DeleteAsync($"{_client.BaseAddress}/TaiKhoanMatKhau/DeleteTaiKhoanMatKhau/{id}").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Tài khoản đã được xóa.";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Đã xảy ra lỗi khi xóa tài khoản.";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
 
     }
 }
