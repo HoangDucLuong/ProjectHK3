@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ProjectHK3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class LoaiGiaoHangController : ControllerBase
     {
@@ -101,7 +101,7 @@ namespace ProjectHK3.Controllers
         }
 
         // DELETE: api/LoaiGiaoHang
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteLoaiGiaoHang(int id)
         {
             var loaiGiaoHang = _context.LoaiGiaoHangs.Find(id);

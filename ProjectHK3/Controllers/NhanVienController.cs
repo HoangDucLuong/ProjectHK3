@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectHK3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class NhanVienController : ControllerBase
     {
@@ -113,15 +113,10 @@ namespace ProjectHK3.Controllers
 
 
         // DELETE: api/NhanVien/5
-        [HttpDelete]
-        public async Task<IActionResult> DeleteNhanVien(NhanVienDTO nhanVienDTO)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNhanVien(int id)
         {
-            if (nhanVienDTO == null || nhanVienDTO.MaNhanVien == null)
-            {
-                return BadRequest();
-            }
-
-            var nhanVien = await _context.NhanViens.FindAsync(nhanVienDTO.MaNhanVien);
+            var nhanVien = await _context.NhanViens.FindAsync(id);
             if (nhanVien == null)
             {
                 return NotFound();

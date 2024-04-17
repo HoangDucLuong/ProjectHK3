@@ -3,7 +3,7 @@
     public class NhanVienDTO
     {
         public int MaNhanVien { get; set; }
+        public int MaTaiKhoan { get; set; } 
         public string TenNhanVien { get; set; }
-        public int MaTaiKhoan { get; set; } // Thêm MaTaiKhoan vào DTO
     }
 }

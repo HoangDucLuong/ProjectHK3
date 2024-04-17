@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectHK3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class KhachHangController : ControllerBase
     {
@@ -124,7 +124,7 @@ namespace ProjectHK3.Controllers
         }
 
         // DELETE: api/KhachHang
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteKhachHang(int id)
         {
             var khachHang = await _context.KhachHangs.FindAsync(id);

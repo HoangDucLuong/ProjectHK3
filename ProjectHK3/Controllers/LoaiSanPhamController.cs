@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectHK3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class LoaiSanPhamController : ControllerBase
     {
@@ -109,7 +109,7 @@ namespace ProjectHK3.Controllers
 
 
         // DELETE: api/LoaiSanPham/5
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLoaiSanPham(int id)
         {
             var loaiSanPham = await _context.LoaiSanPhams.FindAsync(id);
