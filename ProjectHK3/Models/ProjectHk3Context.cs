@@ -35,13 +35,13 @@ public partial class ProjectHk3Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-A77GQJR;Initial Catalog=ProjectHK3;Persist Security Info=True;User ID=sa;Password=123456;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=KDYO;Initial Catalog=ProjectHK3;Persist Security Info=True;User ID=sa;Password=123;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CodeSanPham>(entity =>
         {
-            entity.HasKey(e => e.MaCode).HasName("PK__CodeSanP__152C7C5D9B2CD7C1");
+            entity.HasKey(e => e.MaCode).HasName("PK__CodeSanP__152C7C5D77E6855C");
 
             entity.ToTable("CodeSanPham", tb => tb.HasTrigger("before_insert_CodeSanPham"));
 
@@ -52,7 +52,7 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<DonDatHang>(entity =>
         {
-            entity.HasKey(e => e.MaDonHang).HasName("PK__DonDatHa__129584ADC2C98077");
+            entity.HasKey(e => e.MaDonHang).HasName("PK__DonDatHa__129584AD8D6E6B2A");
 
             entity.ToTable("DonDatHang", tb => tb.HasTrigger("before_insert_DonDatHang"));
 
@@ -81,11 +81,11 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<KhachHang>(entity =>
         {
-            entity.HasKey(e => e.MaKhachHang).HasName("PK__KhachHan__88D2F0E539D36C5A");
+            entity.HasKey(e => e.MaKhachHang).HasName("PK__KhachHan__88D2F0E5091D1D0D");
 
             entity.ToTable("KhachHang");
 
-            entity.HasIndex(e => e.MaTaiKhoan, "UQ__KhachHan__AD7C6528DC10BC91").IsUnique();
+            entity.HasIndex(e => e.MaTaiKhoan, "UQ__KhachHan__AD7C652878F4B7B7").IsUnique();
 
             entity.Property(e => e.DiaChi).HasMaxLength(255);
             entity.Property(e => e.Email)
@@ -104,7 +104,7 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<LoaiGiaoHang>(entity =>
         {
-            entity.HasKey(e => e.MaLoaiGiaoHang).HasName("PK__LoaiGiao__3A297208BB937D06");
+            entity.HasKey(e => e.MaLoaiGiaoHang).HasName("PK__LoaiGiao__3A29720871465653");
 
             entity.ToTable("LoaiGiaoHang");
 
@@ -113,7 +113,7 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<LoaiSanPham>(entity =>
         {
-            entity.HasKey(e => e.MaLoai).HasName("PK__LoaiSanP__730A575993D0BFD3");
+            entity.HasKey(e => e.MaLoai).HasName("PK__LoaiSanP__730A5759777A2175");
 
             entity.ToTable("LoaiSanPham");
 
@@ -122,11 +122,11 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<NhanVien>(entity =>
         {
-            entity.HasKey(e => e.MaNhanVien).HasName("PK__NhanVien__77B2CA47365D4F72");
+            entity.HasKey(e => e.MaNhanVien).HasName("PK__NhanVien__77B2CA47A5CD08A2");
 
             entity.ToTable("NhanVien");
 
-            entity.HasIndex(e => e.MaTaiKhoan, "UQ__NhanVien__AD7C65281071B1C9").IsUnique();
+            entity.HasIndex(e => e.MaTaiKhoan, "UQ__NhanVien__AD7C6528928A2BFD").IsUnique();
 
             entity.Property(e => e.TenNhanVien).HasMaxLength(255);
 
@@ -138,11 +138,11 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<SanPham>(entity =>
         {
-            entity.HasKey(e => e.MaSanPham).HasName("PK__SanPham__FAC7442DB29BC35C");
+            entity.HasKey(e => e.MaSanPham).HasName("PK__SanPham__FAC7442D121A8E44");
 
             entity.ToTable("SanPham");
 
-            entity.HasIndex(e => e.MaSoSanPham, "UQ__SanPham__F2321537F9B09D13").IsUnique();
+            entity.HasIndex(e => e.MaSoSanPham, "UQ__SanPham__F23215379ABE645C").IsUnique();
 
             entity.Property(e => e.Gia).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.MaSoSanPham).HasMaxLength(7);
@@ -156,11 +156,11 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<TaiKhoanMatKhau>(entity =>
         {
-            entity.HasKey(e => e.MaTaiKhoan).HasName("PK__TaiKhoan__AD7C6529E634EF5D");
+            entity.HasKey(e => e.MaTaiKhoan).HasName("PK__TaiKhoan__AD7C6529B4C98BF5");
 
             entity.ToTable("TaiKhoanMatKhau");
 
-            entity.HasIndex(e => e.TaiKhoan, "UQ__TaiKhoan__D5B8C7F0FFAB0301").IsUnique();
+            entity.HasIndex(e => e.TaiKhoan, "UQ__TaiKhoan__D5B8C7F0A8A50765").IsUnique();
 
             entity.Property(e => e.MatKhau)
                 .HasMaxLength(256)
@@ -172,7 +172,7 @@ public partial class ProjectHk3Context : DbContext
 
         modelBuilder.Entity<ThanhToan>(entity =>
         {
-            entity.HasKey(e => e.MaThanhToan).HasName("PK__ThanhToa__D4B2584415001DAF");
+            entity.HasKey(e => e.MaThanhToan).HasName("PK__ThanhToa__D4B258444C75D6E0");
 
             entity.ToTable("ThanhToan");
 

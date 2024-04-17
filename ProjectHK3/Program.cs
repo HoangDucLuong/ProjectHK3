@@ -1,9 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using ProjectHK3.Models;
-using System.Text;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.IdentityModel.Tokens;
+global using ProjectHK3.Models;
+global using ProjectHK3.Services.EmaiServices;
+global using System.Text;
+using ProjectHK3.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.AddCors(options =>
