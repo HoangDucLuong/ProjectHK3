@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ProjectHK3_FE_Admin.Controllers
 {
-    public class LoaiSanPhamController : Controller
+    public class SanPhamController : Controller
     {
         Uri baseAddress = new Uri("https://localhost:7283/api");
         private readonly HttpClient _client;
 
-        public LoaiSanPhamController()
+        public SanPhamController()
         {
             _client = new HttpClient();
             _client.BaseAddress = baseAddress;
@@ -19,13 +19,13 @@ namespace ProjectHK3_FE_Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<LoaiSanPhamViewModel> list = new List<LoaiSanPhamViewModel>();
-            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/LoaiSanPham/GetLoaiSanPhams").Result;
+            List<SanPhamViewModel> list = new List<SanPhamViewModel>();
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/SanPham/GetSanPhams").Result;
 
             if (response.IsSuccessStatusCode)
             {
                 string data = response.Content.ReadAsStringAsync().Result;
-                list = JsonConvert.DeserializeObject<List<LoaiSanPhamViewModel>>(data);
+                list = JsonConvert.DeserializeObject<List<SanPhamViewModel>>(data);
             }
 
             return View(list);
@@ -38,13 +38,13 @@ namespace ProjectHK3_FE_Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(LoaiSanPhamViewModel model)
+        public IActionResult Create(SanPhamViewModel model)
         {
             try
             {
                 string data = JsonConvert.SerializeObject(model);
                 StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "/LoaiSanPham/PostLoaiSanPham", content).Result;
+                HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "/SanPham/PostSanPham", content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["successMessage"] = "Loại sản phẩm đã được tạo thành công.";
@@ -64,12 +64,12 @@ namespace ProjectHK3_FE_Admin.Controllers
         {
             try
             {
-                LoaiSanPhamViewModel model = new LoaiSanPhamViewModel();
-                HttpResponseMessage response = _client.GetAsync($"{_client.BaseAddress}/LoaiSanPham/GetLoaiSanPham/{id}").Result;
+                SanPhamViewModel model = new SanPhamViewModel();
+                HttpResponseMessage response = _client.GetAsync($"{_client.BaseAddress}/SanPham/GetSanPham/{id}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     string data = response.Content.ReadAsStringAsync().Result;
-                    model = JsonConvert.DeserializeObject<LoaiSanPhamViewModel>(data);
+                    model = JsonConvert.DeserializeObject<SanPhamViewModel>(data);
                 }
                 return View(model);
             }
@@ -81,7 +81,7 @@ namespace ProjectHK3_FE_Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, LoaiSanPhamViewModel model)
+        public IActionResult Edit(int id, SanPhamViewModel model)
         {
             try
             {
@@ -93,17 +93,17 @@ namespace ProjectHK3_FE_Admin.Controllers
 
                 string data = JsonConvert.SerializeObject(model);
                 StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = _client.PutAsync($"{_client.BaseAddress}/LoaiSanPham/PutLoaiSanPham", content).Result;
+                HttpResponseMessage response = _client.PutAsync($"{_client.BaseAddress}/SanPham/PutSanPham", content).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["successMessage"] = "Loại sản phẩm đã được cập nhật.";
+                    TempData["successMessage"] = "Sản phẩm đã được cập nhật.";
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     // Nếu không thành công, thêm thông báo lỗi vào TempData
-                    TempData["errorMessage"] = "Đã xảy ra lỗi khi cập nhật nhân viên.";
+                    TempData["errorMessage"] = "Đã xảy ra lỗi khi cập nhật sản phẩm.";
                     return View(model);
                 }
             }
@@ -120,16 +120,16 @@ namespace ProjectHK3_FE_Admin.Controllers
         {
             try
             {
-                HttpResponseMessage response = _client.GetAsync($"{_client.BaseAddress}/LoaiSanPham/GetLoaiSanPham/{id}").Result;
+                HttpResponseMessage response = _client.GetAsync($"{_client.BaseAddress}/SanPham/GetSanPham/{id}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     string data = response.Content.ReadAsStringAsync().Result;
-                    LoaiSanPhamViewModel model = JsonConvert.DeserializeObject<LoaiSanPhamViewModel>(data);
+                    SanPhamViewModel model = JsonConvert.DeserializeObject<SanPhamViewModel>(data);
                     return View(model);
                 }
                 else
                 {
-                    TempData["errorMessage"] = "Không tìm thấy loại sản phẩm để xóa.";
+                    TempData["errorMessage"] = "Không tìm thấy sản phẩm để xóa.";
                     return RedirectToAction("Index");
                 }
             }
@@ -145,15 +145,15 @@ namespace ProjectHK3_FE_Admin.Controllers
         {
             try
             {
-                HttpResponseMessage response = _client.DeleteAsync($"{_client.BaseAddress}/LoaiSanPham/DeleteLoaiSanPham/{id}").Result;
+                HttpResponseMessage response = _client.DeleteAsync($"{_client.BaseAddress}/SanPham/DeleteSanPham/{id}").Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["successMessage"] = "Loại sản phẩm đã được xóa.";
+                    TempData["successMessage"] = "Sản phẩm đã được xóa.";
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    TempData["errorMessage"] = "Đã xảy ra lỗi khi xóa loại sản phẩm.";
+                    TempData["errorMessage"] = "Đã xảy ra lỗi khi xóa sản phẩm.";
                     return RedirectToAction("Index");
                 }
             }
