@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+ProjectHK3/Models/ProjectHk3Context.cs
+ProjectHK3/appsettings.json
