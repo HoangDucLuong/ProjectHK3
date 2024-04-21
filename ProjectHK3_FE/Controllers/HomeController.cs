@@ -20,7 +20,7 @@ namespace ProjectHK3_FE.Controllers
 		{
 			using (HttpClient client = new HttpClient())
             {
-                string apiUrl = "https://localhost:7283/api/TaiKhoanMatKhau/GetTaiKhoanMatKhau";
+                string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
                 //images/women-clothes-img.png
 
                 HttpResponseMessage response = await client.GetAsync(apiUrl);

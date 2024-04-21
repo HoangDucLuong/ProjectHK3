@@ -10,7 +10,7 @@ namespace ProjectHK3_FE.Controllers
         {
 			using (HttpClient client = new HttpClient())
 			{
-				string apiUrl = "https://localhost:7283/api/TaiKhoanMatKhau/GetTaiKhoanMatKhau";
+				string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
 				//images/women-clothes-img.png
 
 				HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -33,11 +33,10 @@ namespace ProjectHK3_FE.Controllers
 				}
 			}
 		}
-		public async Task<ActionResult> Men()
+		public async Task<List<Product>> GetProductsCategory(string apiUrl)
 		{
 			using (HttpClient client = new HttpClient())
 			{
-				string apiUrl = "https://localhost:7283/api/TaiKhoanMatKhau/GetTaiKhoanMatKhau";
 				//images/women-clothes-img.png
 
 				HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -49,15 +48,50 @@ namespace ProjectHK3_FE.Controllers
 					List<Product> productList = JsonConvert.DeserializeObject<List<Product>>(responseData);
 
 					//ViewBag.ApiData = responseData;
-					return View(productList);
+					return productList;
 
 				}
 				else
 				{
-					return View(new List<Product>());
-
+					return new List<Product>();
 				}
 			}
+		}
+		public async Task<ActionResult> Men()
+		{
+			string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
+			List<Product> productList = await GetProductsCategory(apiUrl);
+
+			return View(productList);
+
+		}
+		public async Task<ActionResult> Women()
+		{
+			string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
+			List<Product> productList = await GetProductsCategory(apiUrl);
+
+			return View("Men", productList);
+		}
+		public async Task<ActionResult> Accessories()
+		{
+			string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
+			List<Product> productList = await GetProductsCategory(apiUrl);
+
+			return View("Men", productList);
+		}
+		public async Task<ActionResult> NewArrival()
+		{
+			string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
+			List<Product> productList = await GetProductsCategory(apiUrl);
+
+			return View("Men", productList);
+		}
+		public async Task<ActionResult> Collection()
+		{
+			string apiUrl = "https://localhost:7283/api/SanPham/GetSanPhams";
+			List<Product> productList = await GetProductsCategory(apiUrl);
+
+			return View("Men", productList);
 		}
 	}
 }

@@ -2,9 +2,13 @@
 {
     public class Product
     {
-        public int maTaiKhoan { get; set; }
-        public string taiKhoan { get; set; }
-        public string matKhau { get; set; }
+        public int maSanPham { get; set; }
+		public string maSoSanPham { get; set; }
 
-    }
+		public string tenSanPham { get; set; }
+        public string moTaSanPham { get; set; }
+		public double gia { get; set; }
+		public int maLoai { get; set; }
+
+	}
 }
