@@ -31,6 +31,7 @@ namespace ProjectHK3.Controllers
                     TenSanPham = sp.TenSanPham,
                     MoTaSanPham = sp.MoTaSanPham,
                     Gia = sp.Gia,
+                    SoLuong = sp.SoLuong,
                     MaLoai = sp.MaLoai
                 }).ToListAsync();
 
@@ -55,6 +56,7 @@ namespace ProjectHK3.Controllers
                 TenSanPham = sanPham.TenSanPham,
                 MoTaSanPham = sanPham.MoTaSanPham,
                 Gia = sanPham.Gia,
+                SoLuong = sanPham.SoLuong,
                 MaLoai = sanPham.MaLoai
             };
 
@@ -72,6 +74,7 @@ namespace ProjectHK3.Controllers
                 TenSanPham = sanPhamDTO.TenSanPham,
                 MoTaSanPham = sanPhamDTO.MoTaSanPham,
                 Gia = sanPhamDTO.Gia,
+                SoLuong = sanPhamDTO.SoLuong,
                 MaLoai = sanPhamDTO.MaLoai
             };
 
@@ -102,6 +105,7 @@ namespace ProjectHK3.Controllers
             sanPham.TenSanPham = sanPhamDTO.TenSanPham;
             sanPham.MoTaSanPham = sanPhamDTO.MoTaSanPham;
             sanPham.Gia = sanPhamDTO.Gia;
+            sanPham.SoLuong = sanPhamDTO.SoLuong;
             sanPham.MaLoai = sanPhamDTO.MaLoai;
 
             try

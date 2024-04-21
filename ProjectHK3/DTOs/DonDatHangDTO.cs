@@ -8,6 +8,6 @@
         public int LoaiGiaoHang { get; set; }
         public DateTime NgayDat { get; set; }
         public string ThanhToan { get; set; }
-        public int? MaLoaiGiaoHang { get; set; }
+        public int MaLoaiGiaoHang { get; set; }
     }
 }
