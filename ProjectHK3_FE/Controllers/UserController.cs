@@ -26,7 +26,7 @@ namespace ProjectHK3_FE.Controllers
             using (var client = new HttpClient())
             {
                 // Đặt URL của API
-                string apiUrl = "https://localhost:7283/api/Auth/logout";
+                string apiUrl = "https://localhost:7283/api/Auth/Logout/logout";
 
                 //var json = $"{{\"username\":\"{username}\", \"password\":\"{password}\"}}";
                 //var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -57,7 +57,7 @@ namespace ProjectHK3_FE.Controllers
 			using (var client = new HttpClient())
 			{
 				// Đặt URL của API
-				string apiUrl = "https://localhost:7283/api/Auth/login";
+				string apiUrl = "https://localhost:7283/api/Auth/Login/login";
 
 				var json = $"{{\"username\":\"{username}\", \"password\":\"{password}\"}}";
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -95,7 +95,7 @@ namespace ProjectHK3_FE.Controllers
 			using (var client = new HttpClient())
 			{
 				// Đặt URL của API
-				string apiUrl = "https://localhost:7283/api/Auth/register";
+				string apiUrl = "https://localhost:7283/api/Auth/Register/register";
 
 				var json = $"{{\"username\":\"{username}\", \"password\":\"{password}\"}}";
 				var content = new StringContent(json, Encoding.UTF8, "application/json");

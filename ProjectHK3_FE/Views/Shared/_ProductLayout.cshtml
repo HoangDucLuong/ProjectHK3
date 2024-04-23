@@ -25,69 +25,6 @@
 
 			<!-- Top Navigation -->
 
-			<div class="top_nav">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="top_nav_left">free shipping on all u.s orders over $50</div>
-						</div>
-						<div class="col-md-6 text-right">
-							<div class="top_nav_right">
-								<ul class="top_nav_menu">
-
-									<!-- Currency / Language / My Account -->
-
-									<li class="currency">
-										<a href="#">
-											usd
-											<i class="fa fa-angle-down"></i>
-										</a>
-										<ul class="currency_selection">
-											<li><a href="#">cad</a></li>
-											<li><a href="#">aud</a></li>
-											<li><a href="#">eur</a></li>
-											<li><a href="#">gbp</a></li>
-										</ul>
-									</li>
-									<li class="language">
-										<a href="#">
-											English
-											<i class="fa fa-angle-down"></i>
-										</a>
-										<ul class="language_selection">
-											<li><a href="#">French</a></li>
-											<li><a href="#">Italian</a></li>
-											<li><a href="#">German</a></li>
-											<li><a href="#">Spanish</a></li>
-										</ul>
-									</li>
-									<li class="account">
-										<a href="#">
-											My Account
-											<i class="fa fa-angle-down"></i>
-										</a>
-										<ul class="account_selection">
-											@if (Context.Session.Keys.Contains("Username"))
-											{
-												var username = Context.Session.GetString("Username");
-												<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i>@username</a></li>
-												<li><a href="@Url.Content("~/User/Logout")"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a></li>
-
-											}
-											else
-											{
-												<li><a href="@Url.Content("~/User/Login")"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-												<li><a href="@Url.Content("~/User/Register")"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
-											}
-										</ul>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
 			<!-- Main Navigation -->
 
 			<div class="main_nav_container">
@@ -103,12 +40,28 @@
 									<li><a href="#">shop</a></li>
 									<li><a href="#">promotion</a></li>
 									<li><a href="#">pages</a></li>
-									<li><a href="#">blog</a></li>
-									<li><a href="contact.html">contact</a></li>
+									<li><a href="/Home/About">about</a></li>
+									<li><a href="/Home/Contact">contact</a></li>
 								</ul>
 								<ul class="navbar_user">
 									<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-									<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+									<li class="account">
+										<a href="#">My Account</a>
+										<ul class="account_selection">
+											@if (Context.Session.Keys.Contains("Username"))
+											{
+												var username = Context.Session.GetString("Username");
+												<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i>@username</a></li>
+												<li><a href="@Url.Content("~/User/Logout")"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a></li>
+
+											}
+											else
+											{
+												<li><a href="@Url.Content("~/User/Login")"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+												<li><a href="@Url.Content("~/User/Register")"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+											}
+										</ul>
+									</li>
 									<li class="checkout">
 										<a href="#">
 											<i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -174,12 +127,12 @@
 							}
 						</ul>
 					</li>
-					<li class="menu_item"><a href="#">home</a></li>
+					<li class="menu_item"><a href="../../">home</a></li>
 					<li class="menu_item"><a href="#">shop</a></li>
 					<li class="menu_item"><a href="#">promotion</a></li>
 					<li class="menu_item"><a href="#">pages</a></li>
-					<li class="menu_item"><a href="#">blog</a></li>
-					<li class="menu_item"><a href="#">contact</a></li>
+					<li class="menu_item"><a href="/Home/About">about</a></li>
+					<li class="menu_item"><a href="/Home/Contact">contact</a></li>
 				</ul>
 			</div>
 		</div>

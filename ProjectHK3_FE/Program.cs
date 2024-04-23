@@ -29,4 +29,15 @@ app.MapControllerRoute(
     pattern: "{controller=Category}/{action=Index}/{id?}",
 	defaults: new { controller = "Category", action = "Index" });
 
+app.MapControllerRoute(
+	name: "customRoute",
+	pattern: "About",
+	defaults: new { controller = "Home", action = "About" });
+
+app.MapControllerRoute(
+	name: "customRoute",
+	pattern: "Contact",
+	defaults: new { controller = "Home", action = "Contact" });
+
+
 app.Run();
