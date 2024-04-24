@@ -28,8 +28,8 @@ namespace ProjectHK3.Controllers
                 {
                     MaDonHang = ddh.MaDonHang,
                     MaKhachHang = ddh.MaKhachHang,
-                    MaSanPham = ddh.MaSanPham,
-                    LoaiGiaoHang = ddh.LoaiGiaoHang,
+                    MaSoSanPham = ddh.MaSoSanPham,
+                    SoLuongMua = ddh.SoLuongMua,
                     NgayDat = ddh.NgayDat,
                     ThanhToan = ddh.ThanhToan,
                     MaLoaiGiaoHang = ddh.MaLoaiGiaoHang
@@ -53,8 +53,8 @@ namespace ProjectHK3.Controllers
             {
                 MaDonHang = donDatHang.MaDonHang,
                 MaKhachHang = donDatHang.MaKhachHang,
-                MaSanPham = donDatHang.MaSanPham,
-                LoaiGiaoHang = donDatHang.LoaiGiaoHang,
+                MaSoSanPham = donDatHang.MaSoSanPham,
+                SoLuongMua = donDatHang.SoLuongMua,
                 NgayDat = donDatHang.NgayDat,
                 ThanhToan = donDatHang.ThanhToan,
                 MaLoaiGiaoHang = donDatHang.MaLoaiGiaoHang
@@ -71,8 +71,8 @@ namespace ProjectHK3.Controllers
             {
                 MaDonHang = donDatHangDTO.MaDonHang,
                 MaKhachHang = donDatHangDTO.MaKhachHang,
-                MaSanPham = donDatHangDTO.MaSanPham,
-                LoaiGiaoHang = donDatHangDTO.LoaiGiaoHang,
+                MaSoSanPham = donDatHangDTO.MaSoSanPham,
+                SoLuongMua = donDatHangDTO.SoLuongMua,
                 NgayDat = donDatHangDTO.NgayDat,
                 ThanhToan = donDatHangDTO.ThanhToan,
                 MaLoaiGiaoHang = donDatHangDTO.MaLoaiGiaoHang

@@ -13,7 +13,7 @@ GO
 USE ProjectHK3
 GO
 
--- Bảng TaiKhoanMatKhau (đã có trong mã ban đầu)
+-- Bảng TaiKhoanMatKhau
 CREATE TABLE TaiKhoanMatKhau (
     MaTaiKhoan INT PRIMARY KEY IDENTITY,
     TaiKhoan VARCHAR(50) UNIQUE NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE TaiKhoanMatKhau (
     Role INT NOT NULL -- Vai trò của người dùng: 1 là admin, 2 là nhân viên, 3 là khách hàng
 );
 
--- Bảng NhanVien (đã có trong mã ban đầu)
+-- Bảng NhanVien
 CREATE TABLE NhanVien (
     MaNhanVien INT PRIMARY KEY IDENTITY,
     TenNhanVien NVARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE NhanVien (
     FOREIGN KEY (MaTaiKhoan) REFERENCES TaiKhoanMatKhau(MaTaiKhoan)
 );
 
--- Bảng Khách hàng (đã có trong mã ban đầu)
+-- Bảng Khách hàng
 CREATE TABLE KhachHang (
     MaKhachHang INT PRIMARY KEY IDENTITY,
     TenKhachHang NVARCHAR(255) NOT NULL,
@@ -40,16 +40,16 @@ CREATE TABLE KhachHang (
     FOREIGN KEY (MaTaiKhoan) REFERENCES TaiKhoanMatKhau(MaTaiKhoan)
 );
 
--- Bảng Loại sản phẩm (đã có trong mã ban đầu)
+-- Bảng Loại sản phẩm
 CREATE TABLE LoaiSanPham (
     MaLoai INT PRIMARY KEY IDENTITY,
     TenLoai NVARCHAR(100) NOT NULL
 );
 
--- Bảng SanPham (đã có trong mã ban đầu)
+-- Bảng SanPham
 CREATE TABLE SanPham (
     MaSanPham INT PRIMARY KEY IDENTITY(1,1),
-    MaSoSanPham NVARCHAR(7) NULL,
+    MaSoSanPham NVARCHAR(7) UNIQUE NULL,
     TenSanPham NVARCHAR(255) NOT NULL,
     MaLoai INT,
     MoTaSanPham NVARCHAR(255),
@@ -57,29 +57,27 @@ CREATE TABLE SanPham (
     Gia DECIMAL(10, 2) NOT NULL
 );
 
--- Bảng Loại Giao hàng (đã có trong mã ban đầu)
+-- Bảng Loại Giao hàng
 CREATE TABLE LoaiGiaoHang (
     MaLoaiGiaoHang INT PRIMARY KEY IDENTITY,
     TenLoaiGiaoHang NVARCHAR(100) NOT NULL
 );
 GO
 
--- Sửa lại định nghĩa bảng DonDatHang để tạo cột tính toán MaDonHang làm khóa chính
 CREATE TABLE DonDatHang (
-    MaDonHang NVARCHAR(16) PRIMARY KEY, -- Định nghĩa MaDonHang là khóa chính
+    MaDonHang NVARCHAR(16) PRIMARY KEY, 
     MaKhachHang INT,
-    MaSanPham INT,
-    LoaiGiaoHang INT NOT NULL,
+    MaSoSanPham NVARCHAR(7) NULL,
+	SoLuongMua INT NOT NULL DEFAULT 1,
     NgayDat DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ThanhToan VARCHAR(255) NOT NULL,
     MaLoaiGiaoHang INT NOT NULL,
     FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang),
-    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham),
+    FOREIGN KEY (MaSoSanPham) REFERENCES SanPham(MaSoSanPham),
     FOREIGN KEY (MaLoaiGiaoHang) REFERENCES LoaiGiaoHang(MaLoaiGiaoHang)
 );
 GO
 
--- Tiếp tục thêm bảng ThanhToan như trước
 CREATE TABLE ThanhToan (
     MaThanhToan INT PRIMARY KEY IDENTITY,
     MaDonHang NVARCHAR(16) NOT NULL,
@@ -102,7 +100,6 @@ BEGIN
     INSERT INTO @InsertedTable (MaSanPham, MaLoai, SoLuong)
     SELECT MaSanPham, MaLoai, SoLuong FROM INSERTED;
 
-    -- Cập nhật mã sản phẩm dựa trên MaLoai và MaSanPham
     UPDATE sp
     SET sp.MaSoSanPham = RIGHT('00' + CAST(it.MaSanPham AS NVARCHAR(2)), 2) + RIGHT('00000' + CAST(it.SoLuong AS NVARCHAR(5)), 5),
         sp.SoLuong = it.SoLuong
@@ -111,26 +108,62 @@ BEGIN
 END;
 GO
 
--- Trigger mới cho bảng DonDatHang để tạo mã đơn hàng 16 ký tự
 CREATE TRIGGER Trg_DonDatHang_Insert
 ON DonDatHang
-AFTER INSERT
+INSTEAD OF INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    DECLARE @Id NVARCHAR(16), @LoaiGiaoHang INT, @MaSanPham INT, @Timestamp BIGINT, @SoLuong INT;
-    SELECT @LoaiGiaoHang = LoaiGiaoHang, @MaSanPham = SanPham.MaSanPham, @SoLuong = (SELECT SoLuong FROM INSERTED WHERE MaSanPham = SanPham.MaSanPham)
-    FROM INSERTED
-    JOIN SanPham ON INSERTED.MaSanPham = SanPham.MaSanPham;
-    SELECT @Id = MaSoSanPham FROM SanPham WHERE MaSanPham = @MaSanPham;
-    SET @Timestamp = DATEDIFF(SECOND, '19700101', GETDATE()) % 100000000;
-    UPDATE DonDatHang
-    SET MaDonHang = CONVERT(VARCHAR(1), @LoaiGiaoHang) + @Id + RIGHT('00000000' + CONVERT(VARCHAR(8), @Timestamp), 8)
-    WHERE MaDonHang IS NULL; 
-
-    -- Cập nhật số lượng sản phẩm
-    UPDATE SanPham
-    SET SoLuong = SoLuong - @SoLuong
-    WHERE MaSanPham = @MaSanPham;
+    
+    INSERT INTO DonDatHang(MaDonHang, MaKhachHang, MaSoSanPham, SoLuongMua, NgayDat, ThanhToan, MaLoaiGiaoHang)
+    SELECT 
+        FORMAT(i.MaLoaiGiaoHang, 'D1') -- Loại giao hàng 1 chữ số
+        + RIGHT('0000000' + RTRIM(i.MaSoSanPham), 7) -- Mã sản phẩm 7 chữ số, đảm bảo mã sản phẩm không dài hơn 7 ký tự
+        + RIGHT('00000000' + CONVERT(VARCHAR, CAST(DATEDIFF(SECOND, '1970-01-01', GETDATE()) % 100000000 AS INT)), 8), -- Số đơn hàng 8 chữ số
+        i.MaKhachHang,
+        i.MaSoSanPham,
+        i.SoLuongMua,
+        i.NgayDat,
+        i.ThanhToan,
+        i.MaLoaiGiaoHang
+    FROM inserted i;
+    
+    -- Cập nhật số lượng tồn sau khi đơn đặt hàng được tạo
+    UPDATE sp
+    SET sp.SoLuong = sp.SoLuong - ins.SoLuongMua
+    FROM SanPham sp
+    INNER JOIN INSERTED ins ON sp.MaSoSanPham = ins.MaSoSanPham;
 END;
 GO
+
+CREATE TRIGGER Trg_SanPham_Update
+ON SanPham
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE(SoLuong)
+    BEGIN
+        DECLARE @Count int;
+
+        SELECT @Count = COUNT(*)
+        FROM DonDatHang
+        WHERE MaSoSanPham IN (SELECT MaSoSanPham FROM inserted);
+
+        -- Nếu MaSoSanPham đã được tham chiếu, không cập nhật MaSoSanPham
+        IF @Count = 0
+        BEGIN
+            UPDATE sp
+            SET sp.MaSoSanPham = RIGHT('00' + CAST(sp.MaSanPham AS NVARCHAR(2)), 2) + RIGHT('00000' + CAST(sp.SoLuong AS NVARCHAR(5)), 5)
+            FROM SanPham sp
+            INNER JOIN inserted i ON sp.MaSanPham = i.MaSanPham;
+        END
+        ELSE
+        BEGIN
+            -- Handle the case where MaSoSanPham is referenced in DonDatHang
+            PRINT 'Cannot update MaSoSanPham because it is referenced in DonDatHang';
+        END
+    END
+END;
+GO
+
