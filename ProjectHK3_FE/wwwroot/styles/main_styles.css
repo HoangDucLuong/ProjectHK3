@@ -451,15 +451,21 @@ section
 3.3 Account
 *********************************/
 
-.account
-{
+.account {
 	display: inline-block;
 	position: relative;
-	min-width: 50px;
+	min-width: 100px;
 	padding-left: 20px;
 	text-align: center;
 	vertical-align: middle;
-	background: #1e1e27;
+	background: #1e1e2700;
+	white-space: nowrap;
+}
+.account ul {
+	white-space: normal;
+}
+.account ul li {
+	white-space: nowrap;
 }
 .account > a
 {
@@ -1529,24 +1535,28 @@ section
 *********************************/
 
 .newsletter {
-	width: 100%;
+	width: 50%;
 	background: #f2f2f2;
 	margin-top: 1px;
+	margin-left: 25%;
+	text-align:center;
 }
 .newsletter_text {
 	height: 120px;
-	margin-left: 30px;
+	margin-left: 0px;
 }
-.newsletter_text h4
-{
+.newsletter_text h4 {
 	margin-bottom: 0px;
 	line-height: 24px;
+	text-align: center;
+	width: 100%;
 }
-.newsletter_text p
-{
+.newsletter_text p {
 	margin-bottom: 0px;
 	line-height: 1.7;
 	color: #51545f;
+	width: 100%;
+	text-align: center;
 }
 .newsletter_form
 {
@@ -1559,6 +1569,7 @@ section
 	border: none;
 	padding-left: 20px;
 	margin-left: 30px;
+	margin-top: 10px;
 }
 #newsletter_email:focus
 {

@@ -1452,16 +1452,18 @@ section
 {
 	height: 120px;
 }
-.newsletter_text h4
-{
+.newsletter_text h4 {
 	margin-bottom: 0px;
 	line-height: 24px;
+	text-align: center;
+	width: 100%;
 }
-.newsletter_text p
-{
+.newsletter_text p {
 	margin-bottom: 0px;
 	line-height: 1.7;
 	color: #51545f;
+	text-align: center;
+	width: 100%;
 }
 .newsletter_form
 {
