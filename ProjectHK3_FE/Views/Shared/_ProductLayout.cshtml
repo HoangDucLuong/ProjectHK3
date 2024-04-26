@@ -63,7 +63,7 @@
 										</ul>
 									</li>
 									<li class="checkout">
-										<a href="#">
+										<a href="/User/Cart">
 											<i class="fa fa-shopping-cart" aria-hidden="true"></i>
 											<span id="checkout_items" class="checkout_items">2</span>
 										</a>
@@ -615,6 +615,44 @@
 		</footer>
 
 	</div>
+	
+	<script>
+		document.getElementById("addDonHang").onclick = function() {
+			// Tạo một đối tượng JSON chứa các tham số bạn muốn gửi
+			var data = {
+				maDonHang : "",
+				maKhachHang: 2,
+				maSoSanPham: "0100005",
+				soLuongMua: 1,
+				ngayDat:"1-1-2002",
+				thanhToan: "true",
+				maLoaiGiaoHang: 1
+			};
+
+			// Gửi yêu cầu POST đến API
+			fetch('https://localhost:7283/api/DonDatHang', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then(data => {
+				// Xử lý phản hồi từ API ở đây nếu cần
+				console.log(data);
+			})
+			.catch(error => {
+				// Xử lý lỗi ở đây nếu có
+				console.error('There was an error!', error);
+			});
+		};
+	</script>
 
 	<script src="js/jquery-3.2.1.min.js"></script>
 	<script src="styles/bootstrap4/popper.js"></script>

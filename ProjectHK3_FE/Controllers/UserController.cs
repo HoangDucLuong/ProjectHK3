@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProjectHK3_FE.Models;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 
@@ -12,7 +14,45 @@ namespace ProjectHK3_FE.Controllers
 		{
 			return View();
 		}
-		public IActionResult Login()
+		public async Task<ActionResult> Cart()
+        {
+			using (HttpClient client = new HttpClient())
+			{
+				string apiUrl = "https://localhost:7283/api/DonDatHang";
+
+				HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+				if (response.IsSuccessStatusCode)
+				{
+					string responseData = await response.Content.ReadAsStringAsync();
+
+					List<DonHang> listDonHang = JsonConvert.DeserializeObject<List<DonHang>>(responseData);
+
+					HttpResponseMessage sanPhamResponse = await client.GetAsync("https://localhost:7283/api/SanPham/GetSanPhams");
+					if (sanPhamResponse.IsSuccessStatusCode)
+					{
+						string productJson = await sanPhamResponse.Content.ReadAsStringAsync();
+						List<Product> products = JsonConvert.DeserializeObject<List<Product>>(productJson);
+						foreach (var donHang in listDonHang)
+							foreach (var product in products)
+								if (donHang.maSoSanPham == product.maSoSanPham)
+								{
+									donHang.tenSanPham = product.tenSanPham;
+									donHang.donGia = product.gia;
+								}
+
+					}
+					return View(listDonHang);
+
+				}
+				else
+				{
+					return View(new List<DonHang>());
+
+				}
+			}
+		}
+        public IActionResult Login()
 		{
 			return View(new List<Product>());
 		}
