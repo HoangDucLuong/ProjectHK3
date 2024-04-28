@@ -32,8 +32,8 @@ CREATE TABLE NhanVien (
 -- Bảng Khách hàng
 CREATE TABLE KhachHang (
     MaKhachHang INT PRIMARY KEY IDENTITY,
-    TenKhachHang NVARCHAR(255) NOT NULL,
-    DiaChi NVARCHAR(255) NOT NULL,
+    TenKhachHang NVARCHAR(255),
+    DiaChi NVARCHAR(255),
     Email VARCHAR(100),
     SoDienThoai VARCHAR(15),
     MaTaiKhoan INT UNIQUE NOT NULL,
@@ -166,4 +166,18 @@ BEGIN
     END
 END;
 GO
+
+CREATE TRIGGER trg_AutoCreateKhachHang
+ON TaiKhoanMatKhau
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO KhachHang (TenKhachHang, DiaChi, Email, SoDienThoai, MaTaiKhoan)
+    SELECT NULL, NULL, i.TaiKhoan, NULL, i.MaTaiKhoan
+    FROM inserted i
+    WHERE i.Role = 3;
+END;
+GO
+
 
