@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Sản phẩm</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,9 +15,6 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.MaSanPham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaLoai)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MaSoSanPham)
@@ -31,6 +28,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Gia)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoLuong)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaLoai)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -39,9 +42,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.MaSanPham)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaLoai)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MaSoSanPham)
@@ -56,9 +56,15 @@
                 @Html.DisplayFor(modelItem => item.Gia)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.MaSanPham }) |
-                @Html.ActionLink("Details", "Details", new { id = item.MaSanPham }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.MaSanPham })
+                @Html.DisplayFor(modelItem => item.SoLuong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaLoai)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.MaSanPham }) |
+                @Html.ActionLink("Details", "Details", new { id=item.MaSanPham }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.MaSanPham })
             </td>
         </tr>
 }
