@@ -180,4 +180,38 @@ BEGIN
 END;
 GO
 
+CREATE TRIGGER trg_EnsureSingleAdminAndCreateEmployee
+ON TaiKhoanMatKhau
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @RoleId INT, @RoleCount INT, @InsertedMaTaiKhoan INT, @InsertedTaiKhoan VARCHAR(50);
+
+    -- Lấy thông tin từ bản ghi vừa được chèn
+    SELECT @RoleId = Role, @InsertedMaTaiKhoan = MaTaiKhoan, @InsertedTaiKhoan = TaiKhoan FROM inserted;
+
+    -- Đảm bảo chỉ có một admin duy nhất
+    IF @RoleId = 1
+    BEGIN
+        SELECT @RoleCount = COUNT(*) FROM TaiKhoanMatKhau WHERE Role = 1;
+        IF @RoleCount > 1
+        BEGIN
+            -- Nếu có nhiều hơn một admin, xóa bản ghi mới và thông báo lỗi
+            DELETE FROM TaiKhoanMatKhau WHERE MaTaiKhoan = @InsertedMaTaiKhoan;
+            RAISERROR ('Đã tồn tại tài khoản admin trong hệ thống.', 16, 1);
+            RETURN;
+        END
+    END
+
+    -- Tự động thêm vào bảng NhanVien nếu tài khoản được tạo có Role là nhân viên
+    IF @RoleId = 2
+    BEGIN
+        -- Manually verify here that only admin user can reach this point
+        INSERT INTO NhanVien (TenNhanVien, MaTaiKhoan)
+        VALUES (@InsertedTaiKhoan, @InsertedMaTaiKhoan);
+    END
+END
+GO
+
 

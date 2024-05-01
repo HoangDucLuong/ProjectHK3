@@ -5,10 +5,12 @@ using ProjectHK3.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectHK3.Controllers
 {
     [Route("api/[controller]/[action]")]
+    
     [ApiController]
     public class NhanVienController : ControllerBase
     {
@@ -21,6 +23,7 @@ namespace ProjectHK3.Controllers
 
         // GET: api/NhanVien
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<NhanVienDTO>>> GetNhanViens()
         {
             var nhanVienDTOs = await _context.NhanViens
@@ -36,6 +39,7 @@ namespace ProjectHK3.Controllers
 
         // GET: api/NhanVien/5
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<NhanVienDTO>> GetNhanVien(int id)
         {
             var nhanVien = await _context.NhanViens.FindAsync(id);
@@ -57,6 +61,7 @@ namespace ProjectHK3.Controllers
 
         // POST: api/NhanVien
         [HttpPost]
+        
         public async Task<IActionResult> PostNhanVien(NhanVienDTO nhanVienDTO)
         {
             // Tạo mới đối tượng NhanVien từ DTO
@@ -76,6 +81,7 @@ namespace ProjectHK3.Controllers
 
         // PUT: api/NhanVien/5
         [HttpPut]
+        
         public async Task<IActionResult> PutNhanVien(NhanVienDTO nhanVienDTO)
         {
             if (nhanVienDTO == null || nhanVienDTO.MaNhanVien == null)
@@ -114,6 +120,7 @@ namespace ProjectHK3.Controllers
 
         // DELETE: api/NhanVien/5
         [HttpDelete("{id}")]
+        
         public async Task<IActionResult> DeleteNhanVien(int id)
         {
             var nhanVien = await _context.NhanViens.FindAsync(id);

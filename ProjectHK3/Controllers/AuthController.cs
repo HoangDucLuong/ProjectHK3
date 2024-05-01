@@ -85,7 +85,9 @@ namespace ProjectHK3.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.TaiKhoan.ToString())
+            new Claim(ClaimTypes.Name, user.TaiKhoan.ToString()),
+            // Thêm claim này để lưu thông tin role của người dùng
+            new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(120),
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
@@ -96,5 +98,6 @@ namespace ProjectHK3.Controllers
 
             return tokenHandler.WriteToken(token);
         }
+
     }
 }
