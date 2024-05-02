@@ -193,12 +193,58 @@
 								<span id="quantity_value">1</span>
 								<span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
 							</div>
-							<div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+							<div class="red_button add_to_cart_button" id="showFormCart"><a href="#">Đặt hàng</a></div>
 							<div class="product_favorite d-flex flex-column align-items-center justify-content-center"></div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+
+			<button onclick="showForm()">Hiển thị Form</button>
+			<div id="overlay" onclick ="hideForm()" ></div>
+			<div id="hiddenForm" style="display: none;">
+				<!-- Đây là form ẩn -->
+					
+				<form action="@Url.Action("Payment", "User", new { masoSP = "000" })" method="post">
+					<input type="hidden" id="hiddenmasosp" name="masosp" value="{@Model.maSoSanPham}">
+					<input type="hidden" id="hiddentensp" name="tensp" value="{@Model.tenSanPham}">
+
+					<div class="form-group">
+						<label for="username">Họ và tên:</label>
+						<input name="masosp" id="newsletter_email" type="text" placeholder="Họ tên" required="required">
+					</div>
+					<div class="form-group">
+						<label for="mail">Email:</label>
+						<input name="mail" id="newsletter_email" type="email" placeholder="Your email" required="required" data-error="Valid email is required.">
+					</div>
+					<div class="form-group">
+						<label for="gender">Giới tính:</label>
+						<select name="gender" id="newsletter_email">
+							<option value="male">Nam</option>
+							<option value="female">Nữ</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="phone">Điện thoại:</label>
+						<input name="phone" id="newsletter_email" type="text" placeholder="012345678" required="required">
+					</div>
+					<div class="form-group">
+						<label for="address">Địa chỉ:</label>
+						<textarea name="address" rows="5" cols="50" id="newsletter_email" placeholder="Địa chỉ"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="username">Số lượng:</label>
+						<input name="soluong" id="newsletter_email" type="text" placeholder="1" required="required">
+					</div>
+					<div>
+						<button id="newsletter_submit" type="submit" class="newsletter_submit_btn trans_300" value="Submit">Xác nhận</button>
+					</div>
+				</form>
+			</div>
+    <script src="script.js"></script>
+
+
 
 		</div>
 
@@ -470,7 +516,28 @@
 			</div>
 		</footer>
 
-	</div>Z
+	</div>
+
+	<script>
+		document.getElementById("showFormCart").addEventListener("click", showForm);
+
+		function showForm() {
+
+			var sluongValue = document.getElementById("quantity_value").innerHTML;
+			document.getElementsByName("soluong")[0].value = sluongValue;
+
+			var overlay = document.getElementById("overlay");
+			var form = document.getElementById("hiddenForm");
+			overlay.style.display = "block"; // Hiển thị overlay
+			form.style.display = "block"; // Hiển thị form
+		}
+		function hideForm() {
+			var overlay = document.getElementById("overlay");
+			var form = document.getElementById("hiddenForm");
+			overlay.style.display = "none"; // Ẩn overlay
+			form.style.display = "none"; // Ẩn form
+		}
+	</script>
 
 	<script src="/../js/jquery-3.2.1.min.js"></script>
 	<script src="/../styles/bootstrap4/popper.js"></script>

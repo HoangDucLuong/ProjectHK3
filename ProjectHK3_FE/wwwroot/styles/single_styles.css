@@ -1600,3 +1600,40 @@ section
 {
 	color: #fe4c50;
 }
+
+#overlay {
+	display: none;
+	position: fixed; /* Phủ lên toàn bộ trang */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5); /* Màu nền với độ trong suốt */
+}
+
+#hiddenForm {
+	display: none;
+	position: fixed; /* Hiển thị form ẩn đè lên trang */
+	top: 50%; /* Canh giữa theo chiều dọc */
+	left: 50%; /* Canh giữa theo chiều ngang */
+	transform: translate(-50%, -50%); /* Di chuyển form về giữa */
+	background-color: white;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	z-index: 9999; /* Đảm bảo form nằm trên các phần tử khác */
+}
+.form-group {
+	margin-bottom: 10px;
+}
+.form-group label {
+	display: inline-block;
+	width: 150px;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.form-group button {
+	display: block;
+	margin: 0 auto;
+}

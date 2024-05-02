@@ -2,6 +2,18 @@
 {
     public class DonHang
     {
+        public DonHang(string maDH, int maKH, string masoSP, int sluong, string ngay, int maloaiGH, string tenSP, double dongia)
+        {
+            maDonHang = maDH;
+            maKhachHang = maKH;
+            maSoSanPham = masoSP;
+            soLuongMua = sluong;
+            ngayDat = ngay;
+            thanhToan = "1";
+            maLoaiGiaoHang = maloaiGH;
+            tenSanPham = tenSP;
+            donGia = dongia;
+		}
         public string maDonHang { get; set; }
         public int maKhachHang { get; set; }
         public string maSoSanPham { get; set; }

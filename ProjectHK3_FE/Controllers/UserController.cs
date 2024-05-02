@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProjectHK3_FE.Models;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 
@@ -52,7 +53,66 @@ namespace ProjectHK3_FE.Controllers
 				}
 			}
 		}
-        public IActionResult Login()
+
+		public async Task<ActionResult> Payment(string masosp, string tensp, int soluong, int magiaohang)
+		{
+			using (HttpClient client = new HttpClient())
+			{
+				string apiUrl = "https://localhost:7283/api/KhachHang/GetKhachHangs";
+				string donhangUrl = "https://localhost:7283/api/DonDatHang";
+
+				var userEmail = HttpContext.Session.GetString("Username");
+				int maKH = 0;
+				string dateDatHang = "2024-05-02T15:37:36.221Z";
+
+				HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+				if (response.IsSuccessStatusCode)
+				{
+					string responseData = await response.Content.ReadAsStringAsync();
+
+					List<KhachHang> listKhachHang = JsonConvert.DeserializeObject<List<KhachHang>>(responseData);
+					//Context.Session.GetString("Username");
+
+					foreach (var khachhang in listKhachHang)
+						if (khachhang.email == userEmail)
+						{
+							maKH = khachhang.maKhachHang;
+						}
+
+					var json = $"{{\"maKhachHang\":\"{maKH}\", \"maSoSanPham\":\"{masosp}\", \"soLuongMua\":{soluong}, \"ngayDat\":\"{dateDatHang}\", \"thanhToan\":\"{masosp}\", \"maLoaiGiaoHang\":\"{magiaohang}\"}}";
+					var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+					// Gửi POST request đến API và nhận dữ liệu JSON
+					HttpResponseMessage donhangResponse = await client.PostAsync(apiUrl, content);
+
+					// Xác định liệu request có thành công không
+					if (response.IsSuccessStatusCode)
+					{
+						// Đọc và parse dữ liệu JSON từ response
+						//string donhangResponseData = await response.Content.ReadAsStringAsync();
+
+						return View(new DonHang("000", maKH, masosp, soluong, dateDatHang, magiaohang, tensp, 100));
+
+					}
+					else
+					{
+						return Content("Error: " + response.StatusCode.ToString() + " maso: " + masosp + "  ten: " + tensp);
+					}
+
+				}
+				else
+				{
+					return Content("Error: " + response.Content.ToString() +"\r\n" 
+						+ response.StatusCode.ToString() +" uEmail:" + userEmail + " maKH: " + maKH + " maso: " + masosp + "  ten: " + tensp +" sluong: " + soluong+"  maGH: " + magiaohang +"  date: " + dateDatHang);
+
+					//return View(new List<DonHang>());
+
+				}
+			}
+		}
+
+		public IActionResult Login()
 		{
 			return View(new List<Product>());
 		}
