@@ -1,0 +1,36 @@
+﻿
+
+@{
+	ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+}
+
+<div class="newsletter">
+    <div>
+        <div class="newsletter_text d-flex flex-column justify-content-center align-items-lg-start">
+            <h4>Login</h4>
+            <p>Login to use Admin Dashboard</p>
+        </div>
+    </div>
+    <form action="@Url.Action("SendLogin", "Account")" method="post">
+        <div>
+            <input name="username" id="newsletter_email" type="email" placeholder="Your email" required="required" data-error="Valid email is required.">
+        </div>
+        <div>
+            <input name="password" id="newsletter_email" type="password" placeholder="Your password" required="required" data-error="Valid email is required.">
+        </div>
+        <div>
+            <button id="newsletter_submit" type="submit" class="newsletter_submit_btn trans_300" value="Submit">Login</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="styles/bootstrap4/popper.js"></script>
+<script src="styles/bootstrap4/bootstrap.min.js"></script>
+<script src="plugins/Isotope/isotope.pkgd.min.js"></script>
+<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="plugins/easing/easing.js"></script>
+<script src="js/custom.js"></script>
+
