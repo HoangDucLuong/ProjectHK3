@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    bool hasLogin = Context.Session.Keys.Contains("Username");
+}
+<!DOCTYPE html>
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -35,6 +38,15 @@
   </head>
 
   <body>
+    @if (!Context.Session.Keys.Contains("Username") || (Context.Session.GetInt32("Role") ?? 0) != 1)
+    {
+        <script>window.location.href = '@Url.Action("Login", "Account")';</script>
+    }
+    else
+    {
+        var username = Context.Session.GetString("Username");
+        var role = Context.Session.GetInt32("Role");
+    }
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->

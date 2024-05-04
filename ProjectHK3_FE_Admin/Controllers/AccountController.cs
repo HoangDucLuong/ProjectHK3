@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ProjectHK3_FE_Admin.Models;
+using System;
 using System.Text;
 
 namespace ProjectHK3_FE_Admin.Controllers
@@ -51,33 +54,46 @@ namespace ProjectHK3_FE_Admin.Controllers
 		[HttpPost]
 		public async Task<ActionResult> SendLogin(string username, string password)
 		{
-			// Gọi API và nhận dữ liệu trả về
 			using (var client = new HttpClient())
 			{
-				// Đặt URL của API
 				string apiUrl = "https://localhost:7283/api/Auth/Login/login";
+                string getTaikhoanMatKhauUrl = "https://localhost:7283/api/TaiKhoanMatKhau/GetTaiKhoanMatKhau";
 
-				var json = $"{{\"username\":\"{username}\", \"password\":\"{password}\"}}";
+                var json = $"{{\"username\":\"{username}\", \"password\":\"{password}\"}}";
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				//client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-
-				// Gửi POST request đến API và nhận dữ liệu JSON
 				HttpResponseMessage response = await client.PostAsync(apiUrl, content);
 
-				// Xác định liệu request có thành công không
 				if (response.IsSuccessStatusCode)
 				{
-					// Đọc và parse dữ liệu JSON từ response
 					string responseData = await response.Content.ReadAsStringAsync();
 
 					HttpContext.Session.SetString("Username", username);
-					TempData["LoginSuccess"] = true;
 
-					return RedirectToAction("Index", "TaiKhoanMatKhau");
-					//return Content(responseData, "application/json");
+                    TempData["LoginSuccess"] = true;
 
-				}
+                    HttpResponseMessage tkmkResponse = await client.GetAsync(getTaikhoanMatKhauUrl);
+					if (tkmkResponse.IsSuccessStatusCode)
+					{
+                        string tkmkResponseData = await tkmkResponse.Content.ReadAsStringAsync();
+
+                        List<TaiKhoanMatKhau> listTaikhoanMatkhau = JsonConvert.DeserializeObject<List<TaiKhoanMatKhau>>(tkmkResponseData);
+                        foreach (var tkmk in listTaikhoanMatkhau)
+                            if (tkmk.taiKhoan == username)
+                            {
+                                HttpContext.Session.SetInt32("Role", tkmk.role);
+								break;
+                            }
+
+                        return RedirectToAction("Index", "TaiKhoanMatKhau");
+                    }
+                    else
+					{
+                        HttpContext.Session.SetInt32("Role", 0);
+                        return RedirectToAction("Index", "TaiKhoanMatKhau");
+                    }
+
+                }
 				else
 				{
 					// Trả về lỗi nếu request không thành công
