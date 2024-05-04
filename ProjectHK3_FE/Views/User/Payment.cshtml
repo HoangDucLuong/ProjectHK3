@@ -95,11 +95,10 @@
 					<div class="title">
 						<div class="row">
 							<div class="col"><h4><b>Shopping Cart</b></h4></div>
-							<div class="col align-self-center text-right text-muted">3 items</div>
 						</div>
 					</div>
 					@{
-						var tonggia = Model.donGia * Model.soLuongMua * 2;
+						var tonggia = Model.donGia * Model.soLuongMua ;
 
 						<div class="row border-top border-bottom">
 							<div class="row main align-items-center">
@@ -109,9 +108,9 @@
 									<div class="row">@Model.tenSanPham</div>
 								</div>
 								<div class="col">
-								<a href="#">-</a><a href="#" class="border">@Model.soLuongMua</a><a href="#">+</a>
+									<a href="#" class="decrease">-</a><a href="#" class="quantity border">@Model.soLuongMua</a><a href="#" class="increase">+</a>
 								</div>
-								<div class="col">&euro; @Html.Raw(tonggia) <span class="close">&#10005;</span></div>
+								<div class="col total">$@Html.Raw(tonggia) </div>
 							</div>
 						</div>
 					}
@@ -120,19 +119,15 @@
 				<div class="col-md-4 summary">
 					<div><h5><b>Summary</b></h5></div>
 					<hr>
-					<div class="row">
-						<div class="col" style="padding-left:0;">ITEMS 3</div>
-						<div class="col text-right">&euro; 132.00</div>
-					</div>
 					<form>
 						<p>SHIPPING</p>
-						<select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
+						<select><option class="text-muted">Standard-Delivery- $5.00</option></select>
 						<p>GIVE CODE</p>
 						<input id="code" placeholder="Enter your code">
 					</form>
 					<div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
 						<div class="col">TOTAL PRICE</div>
-						<div class="col text-right">&euro; 137.00</div>
+						<div class="col total">$@Html.Raw(Model.donGia * Model.soLuongMua)</div>
 					</div>
 					<button class="btn">Thanh toán</button>
 				</div>
@@ -205,6 +200,32 @@
 		</footer>
 
 	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$(".increase").click(function () {
+				var quantity = parseInt($(".quantity").text());
+				$(".quantity").text(quantity + 1);
+				updateTotal();
+			});
+
+			$(".decrease").click(function () {
+				var quantity = parseInt($(".quantity").text());
+				if (quantity > 1) {
+					$(".quantity").text(quantity - 1);
+					updateTotal();
+				}
+			});
+
+			function updateTotal() {
+				var quantity = parseInt($(".quantity").text());
+				var donGia = parseFloat(@Model.donGia);
+				var tonggia = donGia * quantity;
+				$(".total").text("$" + tonggia.toFixed(2));
+			}
+		});
+	</script>
 
 	<script src="js/jquery-3.2.1.min.js"></script>
 	<script src="styles/bootstrap4/popper.js"></script>

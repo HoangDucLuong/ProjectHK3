@@ -207,8 +207,9 @@
 				<!-- Đây là form ẩn -->
 					
 				<form action="@Url.Action("Payment", "User", new { masoSP = "000" })" method="post">
-					<input type="hidden" id="hiddenmasosp" name="masosp" value="{@Model.maSoSanPham}">
-					<input type="hidden" id="hiddentensp" name="tensp" value="{@Model.tenSanPham}">
+					<input type="hidden" id="hiddenmasosp" name="masosp" value="@Model.maSoSanPham">
+					<input type="hidden" id="hiddentensp" name="tensp" value="@Model.tenSanPham">
+					<input type="hidden" id="hiddentensp" name="dongia" value="@Model.gia">
 
 					<div class="form-group">
 						<label for="username">Họ và tên:</label>

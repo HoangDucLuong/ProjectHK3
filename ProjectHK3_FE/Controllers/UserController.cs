@@ -54,7 +54,7 @@ namespace ProjectHK3_FE.Controllers
 			}
 		}
 
-		public async Task<ActionResult> Payment(string masosp, string tensp, int soluong, int magiaohang)
+		public async Task<ActionResult> Payment(string masosp, string tensp, int soluong, int magiaohang, double dongia)
 		{
 			using (HttpClient client = new HttpClient())
 			{
@@ -92,7 +92,7 @@ namespace ProjectHK3_FE.Controllers
 						// Đọc và parse dữ liệu JSON từ response
 						//string donhangResponseData = await response.Content.ReadAsStringAsync();
 
-						return View(new DonHang("000", maKH, masosp, soluong, dateDatHang, magiaohang, tensp, 100));
+						return View(new DonHang("000", maKH, masosp, soluong, dateDatHang, magiaohang, tensp, dongia));
 
 					}
 					else
