@@ -25,6 +25,6 @@ app.UseSession();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=TaiKhoanMatKhau}/{action=Index}/{id?}");
+	pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectHK3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DonDatHangController : ControllerBase
     {
