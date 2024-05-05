@@ -129,7 +129,10 @@
 						<div class="col">TOTAL PRICE</div>
 						<div class="col total">$@Html.Raw(Model.donGia * Model.soLuongMua)</div>
 					</div>
+					@using (Html.BeginForm("Payment", "Home", FormMethod.Post, new { @class = "payment-form" }))
+					{
 					<button class="btn">Thanh toán</button>
+					}
 				</div>
 			</div>
 
