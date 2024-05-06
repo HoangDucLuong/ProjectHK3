@@ -70,15 +70,9 @@ namespace ProjectHK3_FE.Controllers
 
 
 
-        public ActionResult Payment(string donationAmount, string donorID, string charityActivity)
+        public ActionResult Payment(string donationAmount, int tonggia, string charityActivity)
         {
-            //string url = ConfigurationManager.AppSettings["Url"];
-            //string returnUrl = ConfigurationManager.AppSettings["ReturnUrl"];
-            //string tmnCode = ConfigurationManager.AppSettings["TmnCode"];
-            //string hashSecret = ConfigurationManager.AppSettings["HashSecret"];
-
-
-
+            
             string url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 	        string returnUrl = "https://localhost:7283/api/ThanhToan";
 	        string tmnCode = "JITYBPC1";
@@ -88,23 +82,12 @@ namespace ProjectHK3_FE.Controllers
 			PayLib pay = new PayLib();
 
             // Lấy số tiền đóng góp từ form
-            string amount = "0";
-            if (donationAmount == "other")
-            {
-                // Nếu người dùng chọn "Other", lấy số tiền từ ô nhập
-                amount = Request.Form["otherAmount"];
-            }
-            else
-            {
-                // Ngược lại, lấy số tiền từ lựa chọn
-                amount = donationAmount;
-            }
-            amount = "100000";
+            string amount = (tonggia * 100 * 24000).ToString();
             // Thêm dữ liệu vào đối tượng PayLib
             pay.AddRequestData("vnp_Version", "2.1.0");
             pay.AddRequestData("vnp_Command", "pay");
             pay.AddRequestData("vnp_TmnCode", tmnCode);
-            pay.AddRequestData("vnp_Amount", "1000000");//(Convert.ToInt32(amount) * 100 * 24000).ToString()); // Số tiền cần chuyển đổi thành đơn vị của VNPAY
+            pay.AddRequestData("vnp_Amount", amount);//(Convert.ToInt32(amount) * 100 * 24000).ToString()); // Số tiền cần chuyển đổi thành đơn vị của VNPAY
             pay.AddRequestData("vnp_BankCode", "");
             pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             pay.AddRequestData("vnp_CurrCode", "VND");

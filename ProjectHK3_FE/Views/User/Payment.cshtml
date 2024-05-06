@@ -131,6 +131,7 @@
 					</div>
 					@using (Html.BeginForm("Payment", "Home", FormMethod.Post, new { @class = "payment-form" }))
 					{
+						@Html.Hidden("tonggia", Html.Raw(Model.donGia * Model.soLuongMua))
 					<button class="btn">Thanh toán</button>
 					}
 				</div>
