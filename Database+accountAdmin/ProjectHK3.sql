@@ -20,7 +20,8 @@ CREATE TABLE TaiKhoanMatKhau (
     MatKhau VARCHAR(256) NOT NULL,
     Role INT NOT NULL -- Vai trò của người dùng: 1 là admin, 2 là nhân viên, 3 là khách hàng
 );
-
+INSERT INTO TaiKhoanMatKhau (TaiKhoan, MatKhau, Role)
+VALUES ('admin@gmail.com', '123', 1);
 -- Bảng NhanVien
 CREATE TABLE NhanVien (
     MaNhanVien INT PRIMARY KEY IDENTITY,
